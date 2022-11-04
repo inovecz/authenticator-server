@@ -197,6 +197,12 @@
         // Initialize the ribbons effect
         init: function()
         {
+            const bodyHasBgClass = document.body.classList.contains(
+                'bg-ribbons'
+            );
+            if (!bodyHasBgClass) {
+                return;
+            }
             try
             {
                 this._canvas = document.createElement( "canvas" );

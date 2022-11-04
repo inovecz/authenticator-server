@@ -14,7 +14,7 @@
     <link rel="shortcut icon" href="{{ url(asset('favicon.ico')) }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     @livewireStyles
-    <body>
+    <body class="bg-ribbons">
         @yield('content')
         @livewireScripts
         @livewire('livewire-ui-modal')

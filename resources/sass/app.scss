@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+body.bg-ribbons{
     @apply bg-gray-500 bg-gradient-radial from-black/0 to-slate-900 bg-center bg-no-repeat bg-fixed bg-cover;
 }
 
