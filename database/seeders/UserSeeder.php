@@ -14,6 +14,6 @@ class UserSeeder extends Seeder
             'surname' => 'Kateřiňák',
             'email' => 'katerinak@indeev.eu'
         ]);
-        User::factory(9)->create();
+        User::factory(999)->create();
     }
 }

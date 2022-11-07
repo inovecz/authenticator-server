@@ -13,10 +13,10 @@ return [
     |
     */
 
-    'previous' => '&laquo; Previous',
-    'next' => 'Next &raquo;',
-    'showing' => 'Showing',
-    'to' => 'to',
-    'of' => 'of',
-    'results' => 'results',
+    'previous' => '&laquo; Předchozí',
+    'next' => 'Následující &raquo;',
+    'showing' => 'Zobrazeno',
+    'to' => 'až',
+    'of' => 'z',
+    'results' => 'výsledků',
 ];
