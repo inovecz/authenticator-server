@@ -2,6 +2,9 @@
 
 namespace App\Http\Livewire\Modals;
 
+use App\Models\User;
+use App\Models\LoginAttemp;
+use App\Services\LoginService;
 use LivewireUI\Modal\ModalComponent;
 use App\Services\ScoreEngineService;
 use Illuminate\Validation\Rules\Password;
@@ -74,6 +77,7 @@ class Authentication extends ModalComponent
             ]);
             $scoreEngineService = new ScoreEngineService();
             $this->loginScoreResponse = $scoreEngineService->score(request(), $validated);
+
         }
     }
 }

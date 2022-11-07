@@ -20,15 +20,17 @@ class UserFactory extends Factory
         $genderName = $gender === GenderEnum::OTHER ? fake()->randomElement([GenderEnum::MALE, GenderEnum::FEMALE]) : $gender;
         $name = $genderName === GenderEnum::MALE ? fake()->firstNameMale() : fake()->firstNameFemale();
         $surname = $genderName === GenderEnum::MALE ? fake()->lastNameMale() : fake()->lastNameFemale();
-        $username = $name . $surname;
         return [
             'name' => $name,
             'surname' => $surname,
-            // 'gender' => $gender,
-            'email' => Str::of($username)->lower()->ascii() . '@' . $this->faker->safeEmailDomain(),
+            'gender' => $gender->value,
+            'email' => fake()->unique()->email,
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
+            'last_attemp_at' => fake()->dateTimeBetween(now()->subMonths(12), now()),
+            'login_count' => $loginCount = fake()->numberBetween(0, 10),
+            'average_score' => $loginCount === 0 ? 0 : fake()->randomFloat(2, 0, 100),
         ];
     }
 }

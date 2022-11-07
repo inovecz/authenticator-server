@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.guest')
 
 @section('content')
 
@@ -11,9 +11,9 @@
                 <span class="text-2xl sm:text-5xl text-gray-100 font-light">Authenticator Server</span>
             </div>
         <div class="relative flex flex-col sm:flex-row gap-4 backdrop-blur-lg bg-gray-500/30 border border-gray-200/30 rounded-xl px-8 sm:px-32 py-8 shadow-lg">
-            <livewire:components.button :click="'$emit(\'openModal\', \'modals.authentication\', {\'action\': \'login\'})'" :type="'button'" :title="'Přihlášení'" :style="'primary'"/>
-            <livewire:components.button :click="'$emit(\'openModal\', \'modals.authentication\', {\'action\': \'register\'})'" :type="'button'" :title="'Registrace'" :style="'primary'"/>
-            <livewire:components.button :click="'$emit(\'openModal\', \'modals.authentication\', {\'action\': \'forgottenPassword\'})'" :type="'button'" :title="'Zapomenuté heslo'" :style="'secondary'"/>
+            <x-button :click="'Livewire.emit(\'openModal\', \'modals.authentication\', {\'action\': \'login\'})'" type="submit" button="primary">Přihlášení</x-button>
+            <x-button :click="'Livewire.emit(\'openModal\', \'modals.authentication\', {\'action\': \'register\'})'" type="submit" button="primary">Registrace</x-button>
+            <x-button :click="'Livewire.emit(\'openModal\', \'modals.authentication\', {\'action\': \'forgottenPassword\'})'" type="submit" button="secondary">Zapomenuté heslo</x-button>
         </div>
         </div>
     </div>

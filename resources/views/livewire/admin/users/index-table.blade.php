@@ -22,21 +22,33 @@
                     <thead>
                         <tr>
                             <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                <a class="cursor-pointer whitespace-nowrap" wire:click="orderBy('surname')">
-                                    Příjmení
-                                    <x-sort-icon field="surname" :orderBy="$orderBy" :sortAsc="$sortAsc"/>
-                                </a>
-                            </th>
-                            <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                <a class="cursor-pointer whitespace-nowrap" wire:click="orderBy('name')">
-                                    Jméno
-                                    <x-sort-icon field="name" :orderBy="$orderBy" :sortAsc="$sortAsc"/>
+                                <a class="cursor-pointer whitespace-nowrap" wire:click="orderBy('fullname')">
+                                    Uživatel
+                                    <x-sort-icon field="fullname" :orderBy="$orderBy" :sortAsc="$sortAsc"/>
                                 </a>
                             </th>
                             <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                 <a class="cursor-pointer whitespace-nowrap" wire:click="orderBy('email')">
                                     E-mail
                                     <x-sort-icon field="email" :orderBy="$orderBy" :sortAsc="$sortAsc"/>
+                                </a>
+                            </th>
+                            <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                <a class="cursor-pointer whitespace-nowrap" wire:click="orderBy('last_attemp_at')">
+                                    Poslední přihlášení
+                                    <x-sort-icon field="last_attemp_at" :orderBy="$orderBy" :sortAsc="$sortAsc"/>
+                                </a>
+                            </th>
+                            <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                <a class="cursor-pointer whitespace-nowrap" wire:click="orderBy('login_count')">
+                                    Σ přihlášení
+                                    <x-sort-icon field="login_count" :orderBy="$orderBy" :sortAsc="$sortAsc"/>
+                                </a>
+                            </th>
+                            <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                <a class="cursor-pointer whitespace-nowrap" wire:click="orderBy('average_score')">
+                                    Ø skóre
+                                    <x-sort-icon field="average_score" :orderBy="$orderBy" :sortAsc="$sortAsc"/>
                                 </a>
                             </th>
                             <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-gray-700">
@@ -51,17 +63,27 @@
                                         <img src="https://www.gravatar.com/avatar/{{ md5(strtolower($user->getEmail())) }}?s=32&d=retro" alt="">
 
                                         <div class="ml-3 flex flex-col">
-                                            <p class="text-gray-900 whitespace-no-wrap">{{ $user->getSurname() }}</p>
+                                            <div class="text-gray-900 whitespace-no-wrap font-bold">{{ $user->getFullName(reverse: true) }}</div>
+                                            <div class="text-[8px] whitespace-nowrap text-gray-500">{{$user->getHash()}}</div>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="px-5 py-3 border-b border-gray-200 text-sm">
-                                    <p class="text-gray-900 whitespace-no-wrap">{{ $user->getName() }}</p>
-                                </td>
-                                <td class="px-5 py-3 border-b border-gray-200 text-sm">
                                     <p class="text-gray-900 whitespace-no-wrap">{{ $user->getEmail() }}</p>
                                 </td>
-
+                                <td class="px-5 py-3 border-b border-gray-200 text-sm">
+                                    <p class="text-gray-900 whitespace-no-wrap">
+                                        {{ $user->getLastAttempAt()->format('d.m.Y') }}
+                                        <br>
+                                        <span class="text-gray-500 text-xs">{{ $user->getLastAttempAt()->format('H:i:s') }}</span>
+                                    </p>
+                                </td>
+                                <td class="px-5 py-3 border-b border-gray-200 text-sm">
+                                    <p class="text-gray-900 whitespace-no-wrap">{{ $user->getLoginCount() }}</p>
+                                </td>
+                                <td class="px-5 py-3 border-b border-gray-200 text-sm">
+                                    <p class="text-gray-900 whitespace-no-wrap">{{ round($user->getAverageScore(), 1) }}</p>
+                                </td>
                                 <td class="px-5 py-3 border-b border-gray-200 text-sm text-right">
                                     <div class="flex space-x-4 justify-end">
                                         <a class="btn btn-link p-0 cursor-pointer" title="Odstranit uživatele">

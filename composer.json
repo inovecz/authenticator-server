@@ -6,11 +6,15 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2|8.1",
+        "adrianorosa/laravel-geolocation": "^1.1",
         "guzzlehttp/guzzle": "^7.5",
+        "jenssegers/agent": "^2.6",
         "laravel/framework": "^9.19",
+        "laravel/jetstream": "^2.12",
         "laravel/sanctum": "^3.0",
+        "laravel/telescope": "^4.9",
         "laravel/tinker": "^2.7",
-        "livewire/livewire": "^2.10",
+        "livewire/livewire": "^2.5",
         "wire-elements/modal": "^1.0"
     },
     "require-dev": {

@@ -1,10 +1,15 @@
 <?php
+declare(strict_types=1);
 namespace App\Models\Traits;
 
 use Carbon\Carbon;
 
-trait BaseModel
-{
+/**
+ * @property int $id
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ */
+trait ModelTrait {
     public function getId(): int
     {
         return $this->id;
@@ -15,7 +20,7 @@ trait BaseModel
         return $this->created_at;
     }
 
-    public function getUpdated_at(): Carbon
+    public function getUpdatedAt(): Carbon
     {
         return $this->updated_at;
     }

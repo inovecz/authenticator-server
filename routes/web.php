@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,5 +23,20 @@ Route::get('/auth', function () {
 });
 
 Route::get('/admin', function () {
-    return view('admin.users');
-});
+    return view('admin.auth.login');
+})->name('admin-login');
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified'
+])->prefix('admin')
+    ->group(function () {
+        Route::get('/dashboard', [AdminController::class, 'showDashboard'])->name('dashboard');
+        Route::get('/users', function () {
+            return view('admin.users');
+        })->name('users-list');
+        Route::get('/settings', function () {
+            return view('admin.settings');
+        })->name('settings');
+    });

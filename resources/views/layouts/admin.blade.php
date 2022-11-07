@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -15,11 +15,11 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     @livewireStyles
     <body>
-        <div class="relative flex items-top justify-center min-h-screen">
-            <div class="fixed top-0 left-0 flex-none flex flex-col justify-between w-64 min-h-full max-h-full bg-slate-800 text-gray-50 pb-10">
+        <div class="flex items-top justify-center min-h-screen">
+            <div class="flex-none">
                 @livewire('admin.menu')
             </div>
-            <div class="flex-1 bg-gray-50 min-h-full pr-4 pl-72 py-4">
+            <div class="grow bg-gray-50 min-h-screen max-h-screen overflow-y-auto p-4">
                 @yield('content')
             </div>
         </div>

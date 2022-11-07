@@ -16,7 +16,7 @@
         $packageJSON = json_decode(file_get_contents(base_path() . '/package.json'), false, 512, JSON_THROW_ON_ERROR);
         $tailwindVersion = $packageJSON->devDependencies->tailwindcss ?? null;
     @endphp
-    <div class="fixed m-4 {{ $locationClassMap[$location] }} text-xs rounded-full border border-gray-200 px-2 bg-gray-200/50 whitespace-nowrap" style="@if(in_array($location, ['top-center', 'bottom-center'], true))transform: translateX(-50%)@endif">
+    <div class="fixed m-4 {{ $locationClassMap[$location] }} text-xs rounded-full border border-gray-200 px-2 backdrop-blur-sm bg-gray-200/50 whitespace-nowrap" style="@if(in_array($location, ['top-center', 'bottom-center'], true))transform: translateX(-50%)@endif">
         @if($tailwindVersion)
             <span class="py-1 px-2">tailwindcss v{{ str_replace('^', '', $tailwindVersion) }}</span>
         @endif

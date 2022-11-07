@@ -89,13 +89,13 @@
 
             @switch($action)
                 @case('register')
-                    <livewire:components.button :type="'submit'" :title="'Registrovat se'" :style="'primary'" :awesome-icon="'fa-solid fa-user-plus'"/>
+                    <x-button type="submit" button="primary" awesome-icon="fa-solid fa-user-plus">Registrovat se</x-button>
                     @break
                 @case('forgottenPassword')
-                    <livewire:components.button :type="'submit'" :title="'Obnovit heslo'" :style="'primary'" :awesome-icon="'fa-solid fa-key'"/>
+                    <x-button type="submit" button="primary" awesome-icon="fa-solid fa-user-kez">Obnovit heslo</x-button>
                     @break
                 @default
-                    <livewire:components.button :type="'submit'" :title="'Přihlásit se'" :style="'primary'" :awesome-icon="'fa-solid fa-lock'"/>
+                    <x-button type="submit" button="primary" awesome-icon="fa-solid fa-lock">Přihlásit se</x-button>
             @endswitch
 
         </form>

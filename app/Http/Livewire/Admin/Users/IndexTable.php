@@ -17,7 +17,7 @@ class IndexTable extends Component
     public bool $sortAsc = false;
     public bool $hideNoSalary = false;
 
-    public array $filters = ['all' => 'Vše', 'name' => 'Jméno', 'surname' => 'Příjmení', 'email' => 'E-mail'];
+    public array $filters = ['all' => 'Vše', 'name' => 'Jméno', 'surname' => 'Příjmení', 'email' => 'E-mail', 'hash' => 'Hash'];
     public string $filter = 'all';
 
     protected $queryString = ['filter', 'search', 'orderBy', 'sortAsc'];
@@ -33,7 +33,8 @@ class IndexTable extends Component
                 $query->when($this->filter === 'all', function(Builder $searchQuery) {
                     $searchQuery->where('users.name', 'LIKE', '%' . $this->search . '%')
                         ->orWhere('surname', 'LIKE', '%' . $this->search . '%')
-                        ->orWhere('email', 'LIKE', '%' . $this->search . '%');
+                        ->orWhere('email', 'LIKE', '%' . $this->search . '%')
+                        ->orWhere('hash', 'LIKE', '%' . $this->search . '%');
                 });
                 $query->when($this->filter === 'name', function(Builder $searchQuery) {
                     $searchQuery->where('users.name', 'LIKE', '%' . $this->search . '%');
@@ -41,9 +42,16 @@ class IndexTable extends Component
                     $searchQuery->where('surname', 'LIKE', '%' . $this->search . '%');
                 })->when($this->filter === 'email', function(Builder $searchQuery) {
                     $searchQuery->where('email', 'LIKE', '%' . $this->search . '%');
+                })->when($this->filter === 'hash', function(Builder $searchQuery) {
+                    $searchQuery->where('hash', 'LIKE', '%' . $this->search . '%');
                 });
             })->when($this->orderBy !== '', function (Builder $orderQuery) {
-                $orderQuery->orderBy($this->orderBy, $this->sortAsc ? 'asc' : 'desc');
+                if ($this->orderBy === 'fullname') {
+                    $orderQuery->orderBy('surname', $this->sortAsc ? 'asc' : 'desc')
+                        ->orderBy('name', $this->sortAsc ? 'asc' : 'desc');
+                } else {
+                    $orderQuery->orderBy($this->orderBy, $this->sortAsc ? 'asc' : 'desc');
+                }
             })->simplePaginate($this->pageLength);
         return view('livewire.admin.users.index-table', compact('users'));
     }
