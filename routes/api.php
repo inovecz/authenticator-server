@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\API\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,7 +15,13 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::prefix('auth')->group(function() {
+    Route::post('login', [AuthController::class, 'loginPost']);
+    Route::post('register', [AuthController::class, 'registerPost']);
+    Route::post('reset-password', [AuthController::class, 'resetPasswordPost']);
+});
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware(['guard:user', 'auth:sanctum'])->group(function () {
+    Route::post('/profile', [ProfileController::class, 'updateProfilePost']);
+    Route::post('/profile/change-password', [ProfileController::class, 'changePasswordPost']);
 });

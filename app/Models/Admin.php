@@ -1,33 +1,22 @@
 <?php
-declare(strict_types=1);
+
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Carbon\Carbon;
 use App\Enums\GenderEnum;
 use App\Models\Traits\ModelTrait;
 use App\Models\Traits\HashableTrait;
-use App\Models\Traits\ResourceTrait;
-use Laravel\Jetstream\HasProfilePhoto;
-use Laravel\Fortify\TwoFactorAuthenticatable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class Admin extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasProfilePhoto, TwoFactorAuthenticatable, HashableTrait, ModelTrait, ResourceTrait;
+    use HashableTrait, ModelTrait;
 
     // <editor-fold desc="Region: STATE DEFINITION">
     protected $guarded = ['id', 'created_at', 'updated_at'];
-    protected $hidden = ['password', 'remember_token', 'two_factor_recovery_codes', 'two_factor_secret',];
+    protected $hidden = ['password'];
     protected $casts = [
-        'email_verified_at' => 'datetime',
-        'last_attemp_at' => 'datetime',
         'gender' => GenderEnum::class
     ];
-    protected $appends = ['profile_photo_url'];
     // </editor-fold desc="Region: STATE DEFINITION">
 
     // <editor-fold desc="Region: GETTERS">
@@ -50,22 +39,6 @@ class User extends Authenticatable
     {
         return $this->email;
     }
-
-    public function getLastAttempAt(): ?Carbon
-    {
-        return $this->last_attemp_at;
-    }
-
-    public function getLoginCount(): int
-    {
-        return $this->login_count;
-    }
-
-    public function getAverageScore(): float
-    {
-        return $this->average_score;
-    }
-
     // </editor-fold desc="Region: GETTERS">
 
     // <editor-fold desc="Region: COMPUTED GETTERS">
@@ -75,4 +48,5 @@ class User extends Authenticatable
         return $reverse ? $fullname->reverse()->implode(' ') : $fullname->implode(' ');
     }
     // </editor-fold desc="Region: COMPUTED GETTERS">
+
 }

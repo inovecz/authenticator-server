@@ -19,11 +19,13 @@ class ScoreEngineService
         $response = Http::post(config('app.scoring_engine_api') . '/score-login', $data);
         $resultArray = array_merge($response->json(), ['duration' => round(microtime(true) - $start,2)]);
 
-        $user->update([
-            'last_attemp_at' => now(),
-            'average_score' => ($user->getAverageScore() * $user->getLoginCount() + $resultArray['score']) / ($user->getLoginCount() + 1),
-            'login_count' => $user->getLoginCount() + 1,
-        ]);
+        if ($response->successful()) {
+            $user->update([
+                'last_attemp_at' => now(),
+                'average_score' => ($user->getAverageScore() * $user->getLoginCount() + $resultArray['score']) / ($user->getLoginCount() + 1),
+                'login_count' => $user->getLoginCount() + 1,
+            ]);
+        }
 
         return $resultArray;
     }
