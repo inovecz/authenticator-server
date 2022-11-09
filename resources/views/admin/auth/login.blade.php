@@ -9,7 +9,7 @@
                 </svg>
                 <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Přihlášení do administrace</h2>
             </div>
-            <form method="POST" action="{{ route('login') }}">
+            <form method="POST" action="{{ route('admin.login') }}">
                 @csrf
                 <div class="flex flex-col gap-4">
                     <div class="flex flex-col gap-2">

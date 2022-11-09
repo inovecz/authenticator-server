@@ -7,46 +7,43 @@
     </div>
     <ul class="flex flex-col flex-1">
         @if(Auth::user())
-            <a href="{{ route('dashboard') }}">
-                <li :class="menuCollapsed ? 'pl-3' : 'pl-4'" class="relative px-4 py-2 h-10 border-y border-y-transparent {{ request()->is('admin/dashboard') ? 'bg-gray-50' : 'hover:bg-slate-700 hover:border-y-gray-500'}}">
-                    <i class="absolute fa-solid fa-house text-slate-400 mt-1"></i>
-                    <span x-show="!menuCollapsed" class="pl-8 {{ request()->is('admin/dashboard') ? 'text-slate-900' : 'text-slate-50'}}">Nástěnka</span>
-                    @if(request()->is('admin/dashboard'))
-                        @include('components.active-menu-beaks')
-                    @endif
-                </li>
-            </a>
-            <a href="{{ route('users-list') }}">
-                <li :class="menuCollapsed ? 'pl-3' : 'pl-4'" class="relative px-4 py-2 h-10 border-y border-y-transparent {{ request()->is('admin/users') ? 'bg-gray-50' : 'hover:bg-slate-700 hover:border-y-gray-500'}}">
-                    <i class="absolute fa-solid fa-users text-slate-400 mt-1"></i>
-                    <span x-show="!menuCollapsed" class="pl-8 {{ request()->is('admin/users') ? 'text-slate-900' : 'text-slate-50'}}">Uživatelé</span>
-                    @if(request()->is('admin/users'))
-                        @include('components.active-menu-beaks')
-                    @endif
-                </li>
-            </a>
+            @foreach($menuItems['top']['admin'] as $menuItem)
+                <a href="{{ route($menuItem['link']) }}">
+                    <li :class="menuCollapsed ? 'pl-3' : 'pl-4'" class="relative px-4 py-2 h-10 border-y border-y-transparent {{ request()->is($menuItem['activeRoute']) ? 'bg-gray-50' : 'hover:bg-slate-700 hover:border-y-gray-500'}}">
+                        <i class="absolute {{ $menuItem['icon'] }} text-slate-400 mt-1"></i>
+                        <span x-show="!menuCollapsed" class="pl-8 {{ request()->is($menuItem['activeRoute']) ? 'text-slate-900' : 'text-slate-50'}}">{{ $menuItem['name'] }}</span>
+                        @if(request()->is($menuItem['activeRoute']))
+                            @include('components.active-menu-beaks')
+                        @endif
+                    </li>
+                </a>
+            @endforeach
         @else
-            <a href="{{ route('login') }}">
-                <li class="relative px-4 py-2 border-y border-y-transparent {{ request()->is('admin') ? 'bg-gray-50' : 'hover:bg-slate-700 hover:border-y-gray-500'}}">
-                    <i class="absolute fa-solid fa-lock text-slate-400 mt-1"></i>
-                    <span class="pl-8 {{ request()->is('admin') ? 'text-slate-900' : 'text-slate-50'}}">Přihlášení</span>
-                    @if(request()->is('admin'))
-                        @include('components.active-menu-beaks')
-                    @endif
-                </li>
-            </a>
+            @foreach($menuItems['top']['guest'] as $menuItem)
+                <a href="{{ route($menuItem['link']) }}">
+                    <li :class="menuCollapsed ? 'pl-3' : 'pl-4'" class="relative px-4 py-2 h-10 border-y border-y-transparent {{ request()->is($menuItem['activeRoute']) ? 'bg-gray-50' : 'hover:bg-slate-700 hover:border-y-gray-500'}}">
+                        <i class="absolute {{ $menuItem['icon'] }} text-slate-400 mt-1"></i>
+                        <span x-show="!menuCollapsed" class="pl-8 {{ request()->is($menuItem['activeRoute']) ? 'text-slate-900' : 'text-slate-50'}}">{{ $menuItem['name'] }}</span>
+                        @if(request()->is($menuItem['activeRoute']))
+                            @include('components.active-menu-beaks')
+                        @endif
+                    </li>
+                </a>
+            @endforeach
         @endif
         <li class="flex-1"></li>
         @if(Auth::user())
-            <a href="{{ route('settings') }}">
-                <li :class="menuCollapsed ? 'pl-3' : 'pl-4'" class="relative px-4 py-2 h-10 border-y border-y-transparent {{ request()->is('admin/settings') ? 'bg-gray-50' : 'hover:bg-slate-700 hover:border-y-gray-500'}}">
-                    <i class="absolute fa-solid fa-cog text-slate-400 mt-1"></i>
-                    <span x-show="!menuCollapsed" class="pl-8 {{ request()->is('admin/settings') ? 'text-slate-900' : 'text-slate-50'}}">Nastavení</span>
-                    @if(request()->is('admin/settings'))
-                        @include('components.active-menu-beaks')
-                    @endif
-                </li>
-            </a>
+            @foreach($menuItems['bottom']['admin'] as $menuItem)
+                <a href="{{ route($menuItem['link']) }}">
+                    <li :class="menuCollapsed ? 'pl-3' : 'pl-4'" class="relative px-4 py-2 h-10 border-y border-y-transparent {{ request()->is($menuItem['activeRoute']) ? 'bg-gray-50' : 'hover:bg-slate-700 hover:border-y-gray-500'}}">
+                        <i class="absolute {{ $menuItem['icon'] }} text-slate-400 mt-1"></i>
+                        <span x-show="!menuCollapsed" class="pl-8 {{ request()->is($menuItem['activeRoute']) ? 'text-slate-900' : 'text-slate-50'}}">{{ $menuItem['name'] }}</span>
+                        @if(request()->is($menuItem['activeRoute']))
+                            @include('components.active-menu-beaks')
+                        @endif
+                    </li>
+                </a>
+            @endforeach
             <li :class="menuCollapsed ? 'pl-3 flex-col-reverse' : 'pl-4'"  class="relative px-4 py-2 flex gap-4 justify-between z-10">
                 <button class="text-slate-400 hover:text-slate-300 w-3" @click="menuCollapsed = !menuCollapsed">
                     <i x-show="!menuCollapsed" class="fa-solid fa-ellipsis-vertical"></i>

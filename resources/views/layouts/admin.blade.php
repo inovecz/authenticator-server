@@ -23,7 +23,7 @@
                 @yield('content')
             </div>
         </div>
-        @include('helpers.screen-size', ['location' => 'bottom-center'])
+        @include('helpers.screen-size', ['location' => 'bottom-center', 'margin' => 'lg'])
         @livewireScripts
         @livewire('livewire-ui-modal')
         @stack('scripts')

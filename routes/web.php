@@ -2,41 +2,20 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin\LoginController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+Route::get('/', static fn() => redirect('/auth'));
+Route::get('/auth', static fn() => view('welcome'));
 
-Route::get('/', function () {
-    return redirect('/auth');
-});
-
-Route::get('/auth', function () {
-    return view('welcome');
-});
-
-Route::get('/admin', function () {
-    return view('admin.auth.login');
-})->name('admin-login');
-
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified'
-])->prefix('admin')
+Route::prefix('admin')
     ->group(function () {
-        Route::get('/dashboard', [AdminController::class, 'showDashboard'])->name('dashboard');
-        Route::get('/users', function () {
-            return view('admin.users');
-        })->name('users-list');
-        Route::get('/settings', function () {
-            return view('admin.settings');
-        })->name('settings');
+        Route::get('/', static fn() => view('admin.auth.login'));
+        Route::post('/login', [LoginController::class, 'loginPost'])->name('admin.login');
+        //Route::post('/login', fn() => dd(request()))->name('admin.login');
+        Route::middleware(['guard:admin', 'auth'])->group(function (){
+            Route::get('/dashboard', [AdminController::class, 'showDashboard'])->name('dashboard');
+            Route::get('/users', static fn() => view('admin.users'))->name('users-list');
+            Route::get('/settings', static fn() => view('admin.settings'))->name('settings');
+            Route::get('/blacklists', static fn() => view('admin.blacklists'))->name('blacklists');
+        });
     });
