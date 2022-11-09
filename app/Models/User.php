@@ -8,8 +8,6 @@ use App\Enums\GenderEnum;
 use App\Models\Traits\ModelTrait;
 use App\Models\Traits\HashableTrait;
 use App\Models\Traits\ResourceTrait;
-use Laravel\Jetstream\HasProfilePhoto;
-use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -17,7 +15,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasProfilePhoto, TwoFactorAuthenticatable, HashableTrait, ModelTrait, ResourceTrait;
+    use HasApiTokens, HasFactory, Notifiable, HashableTrait, ModelTrait, ResourceTrait;
 
     // <editor-fold desc="Region: STATE DEFINITION">
     protected $guarded = ['id', 'created_at', 'updated_at'];
@@ -27,7 +25,6 @@ class User extends Authenticatable
         'last_attemp_at' => 'datetime',
         'gender' => GenderEnum::class
     ];
-    protected $appends = ['profile_photo_url'];
     // </editor-fold desc="Region: STATE DEFINITION">
 
     // <editor-fold desc="Region: GETTERS">

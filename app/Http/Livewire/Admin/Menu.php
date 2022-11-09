@@ -12,7 +12,7 @@ class Menu extends Component
                 [
                     'name' => 'Přihlášení',
                     'icon' => 'fa-solid fa-lock',
-                    'link' => 'login',
+                    'link' => 'admin.loginPage',
                     'activeRoute' => 'admin'
                 ]
             ],

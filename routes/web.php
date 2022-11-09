@@ -5,11 +5,11 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin\LoginController;
 
 Route::get('/', static fn() => redirect('/auth'));
-Route::get('/auth', static fn() => view('welcome'));
+Route::get('/auth', static fn() => view('welcome'))->name('login');
 
 Route::prefix('admin')
     ->group(function () {
-        Route::get('/', static fn() => view('admin.auth.login'));
+        Route::get('/', static fn() => view('admin.auth.login'))->name('admin.loginPage');
         Route::post('/login', [LoginController::class, 'loginPost'])->name('admin.login');
         //Route::post('/login', fn() => dd(request()))->name('admin.login');
         Route::middleware(['guard:admin', 'auth'])->group(function (){
@@ -17,5 +17,6 @@ Route::prefix('admin')
             Route::get('/users', static fn() => view('admin.users'))->name('users-list');
             Route::get('/settings', static fn() => view('admin.settings'))->name('settings');
             Route::get('/blacklists', static fn() => view('admin.blacklists'))->name('blacklists');
+            Route::post('logout', [LoginController::class, 'logoutPost'])->name('admin.logout');
         });
     });

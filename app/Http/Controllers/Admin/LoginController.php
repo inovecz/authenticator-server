@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AdminLoginRequest;
@@ -18,6 +19,12 @@ class LoginController extends Controller
             return redirect(route('dashboard'));
         }
         return redirect()->back();
+    }
+
+    public function logoutPost(Request $request)
+    {
+        Auth::guard('admin')->logout();
+        return redirect(route('admin.loginPage'));
     }
     // </editor-fold desc="Region: ADMIN">
 }
