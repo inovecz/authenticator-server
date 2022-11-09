@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use DB;
 use Illuminate\Http\Request;
+use App\Services\ScoreEngineService;
 
 class AdminController extends Controller
 {
@@ -17,6 +18,11 @@ class AdminController extends Controller
         $usersCount = (int)$data->usersCount ?: 0;
         $loginCount = (int)$data->loginCount ?: 0;
         $averageScore = (float)$data->averageScore ?: 0;
-        return view('admin.dashboard', compact('usersCount', 'loginCount', 'averageScore'));
+
+        $scoreEngineService = new ScoreEngineService();
+        $blacklistCount = $scoreEngineService->getBlacklistCount();
+
+
+        return view('admin.dashboard', compact('usersCount', 'loginCount', 'averageScore', 'blacklistCount'));
     }
 }

@@ -29,4 +29,13 @@ class ScoreEngineService
 
         return $resultArray;
     }
+
+    public function getBlacklistCount(): array
+    {
+        $response = Http::get(config('app.scoring_engine_api') . '/blacklists/count');
+        if ($response->successful()) {
+            return $response->json();
+        }
+        return ['IP' => 'N/A', 'DOMAIN' => 'N/A', 'EMAIL' => 'N/A'];
+    }
 }
