@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ScoreEngineService
 {
@@ -30,12 +32,22 @@ class ScoreEngineService
         return $resultArray;
     }
 
-    public function getBlacklistCount(): array
+    public function fetchBlacklistCount(): array
     {
         $response = Http::get(config('app.scoring_engine_api') . '/blacklists/count');
         if ($response->successful()) {
             return $response->json();
         }
         return ['IP' => 'N/A', 'DOMAIN' => 'N/A', 'EMAIL' => 'N/A'];
+    }
+
+    public function fetchBlacklistDatatable(string $type, int $pageLength = 10, int $page = 0, string $filter = 'all', string $search = '', string $orderBy = 'id', bool $sortAsc = false): array
+    {
+        $data = compact('pageLength', 'page', 'filter', 'search', 'orderBy', 'sortAsc');
+        $response = Http::post(config('app.scoring_engine_api') . '/blacklists/' . $type . '/datatable', $data);
+        if ($response->successful()) {
+            return $response->json();
+        }
+        return [];
     }
 }

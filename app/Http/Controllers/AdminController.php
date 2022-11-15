@@ -20,7 +20,7 @@ class AdminController extends Controller
         $averageScore = (float)$data->averageScore ?: 0;
 
         $scoreEngineService = new ScoreEngineService();
-        $blacklistCount = $scoreEngineService->getBlacklistCount();
+        $blacklistCount = $scoreEngineService->fetchBlacklistCount();
 
 
         return view('admin.dashboard', compact('usersCount', 'loginCount', 'averageScore', 'blacklistCount'));
