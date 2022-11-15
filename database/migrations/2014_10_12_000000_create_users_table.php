@@ -16,15 +16,13 @@ return new class extends Migration
     {
         Schema::create('users', static function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('surname');
+            $table->string('name', 64);
+            $table->string('surname', 64);
             $table->enum('gender', GenderEnum::values())->default(GenderEnum::OTHER->value);
             $table->string('hash', 32)->index();
-            $table->string('email')->unique();
+            $table->string('email', 64)->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->foreignId('current_team_id')->nullable();
-            $table->text('profile_photo_path')->nullable();
+            $table->string('password', 60);
             $table->timestamp('last_attemp_at')->nullable();
             $table->unsignedInteger('login_count')->default(0);
             $table->unsignedDouble('average_score')->default(0.0);

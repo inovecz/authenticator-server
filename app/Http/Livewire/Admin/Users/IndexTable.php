@@ -61,6 +61,11 @@ class IndexTable extends Component
         $this->resetPage();
     }
 
+    public function updatingPageLength(): void
+    {
+        $this->resetPage();
+    }
+
     public function orderBy($field): void
     {
         if ($field === $this->orderBy) {

@@ -1,0 +1,289 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Inove Authenticator API",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Sign in",
+                "description": "Login by email, password",
+                "operationId": "authLogin",
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@inove.cz"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "PassWord12345"
+                                    },
+                                    "remember": {
+                                        "type": "boolean",
+                                        "example": "true"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "UserResource": {
+                                            "$ref": "#/components/schemas/UserResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user is not authenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Sorry, wrong email address or password. Please try again"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "examples": {
+                                    "string1": {
+                                        "summary": "The email field is required.",
+                                        "value": "The email field is required."
+                                    },
+                                    "string2": {
+                                        "summary": "The selected email is invalid.",
+                                        "value": "The selected email is invalid."
+                                    },
+                                    "string3": {
+                                        "summary": "The password field is required.",
+                                        "value": "The password field is required."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/register": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Registration",
+                "description": "Create new user",
+                "operationId": "authRegister",
+                "requestBody": {
+                    "description": "Pass user information",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "surname",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "Jan"
+                                    },
+                                    "surname": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "Novák"
+                                    },
+                                    "gender": {
+                                        "type": "string",
+                                        "default": "OTHER",
+                                        "enum": [
+                                            "MALE",
+                                            "FEMALE",
+                                            "OTHER"
+                                        ],
+                                        "example": "OTHER"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "jan.novak@seznam.cz"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "PassWord12345"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "PassWord12345"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User has been succesfully created"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "examples": {
+                                    "string1": {
+                                        "summary": "Email already exists",
+                                        "value": "The email has already been taken."
+                                    },
+                                    "string2": {
+                                        "summary": "Invalid gender",
+                                        "value": "The selected gender is invalid."
+                                    },
+                                    "string3": {
+                                        "summary": "Required field",
+                                        "value": "The * field is required."
+                                    },
+                                    "string4": {
+                                        "summary": "Password confirmation",
+                                        "value": "The password confirmation does not match."
+                                    },
+                                    "string5": {
+                                        "summary": "Password length",
+                                        "value": "The password must be at least 8 characters."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "EnumTrait": {
+                "properties": {
+                    "gender": {
+                        "type": "string",
+                        "enum": [
+                            "MALE",
+                            "FEMALE",
+                            "OTHER"
+                        ],
+                        "readOnly": "true"
+                    }
+                },
+                "type": "object"
+            },
+            "UserResource": {
+                "properties": {
+                    "hash": {
+                        "type": "string",
+                        "example": "97b2160d0a3f4b2c9afbdf423c0047f5"
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 64,
+                        "example": "John"
+                    },
+                    "surname": {
+                        "type": "string",
+                        "maxLength": 64,
+                        "example": "Doe"
+                    },
+                    "gender": {
+                        "$ref": "#/components/schemas/EnumTrait/properties/gender"
+                    },
+                    "email": {
+                        "schema": "UserResource",
+                        "description": "User unique email address",
+                        "type": "string",
+                        "format": "email",
+                        "readOnly": "true",
+                        "example": "user@gmail.com"
+                    },
+                    "created_at": {
+                        "$ref": "#/components/schemas/ModelTrait/properties/created_at"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "UserResource"
+                }
+            },
+            "ModelTrait": {
+                "properties": {
+                    "created_at": {
+                        "description": "Initial creation timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true"
+                    },
+                    "updated_at": {
+                        "description": "Last update timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    }
+}
