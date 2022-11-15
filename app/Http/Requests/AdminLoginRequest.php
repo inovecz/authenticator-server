@@ -16,7 +16,7 @@ class AdminLoginRequest extends FormRequest
         return [
             'email' => 'required|string|exists:admins,email',
             'password' => 'required|string',
-            'remember' => 'sometimes|bool'
+            'remember' => 'sometimes|required|in:0,1'
         ];
     }
 

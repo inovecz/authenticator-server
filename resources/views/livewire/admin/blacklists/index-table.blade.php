@@ -1,6 +1,22 @@
 <div class="container mx-auto">
     <div class="">
-        <h2 class="text-4xl mb-4">Domény</h2>
+        <ul class="nav nav-tabs nav-justified flex flex-col md:flex-row flex-wrap list-none border-b border-gray-300 pl-0 mb-4" id="tabs-tabJustify" role="tablist">
+            <li class="nav-item flex-grow text-center" role="presentation">
+                <a wire:click.prevent="changeType('DOMAIN')" href="#" class="@if($blacklistType === 'DOMAIN') text-blue-500 bg-gray-200 @endif rounded-t nav-link w-full block font-medium text-xs leading-tight uppercase px-6 py-3 hover:border-transparent focus:border-transparent">
+                    Domény
+                </a>
+            </li>
+            <li class="nav-item flex-grow text-center" role="presentation">
+                <a wire:click.prevent="changeType('EMAIL')" href="#" class="@if($blacklistType === 'EMAIL') text-blue-500 bg-gray-200 @endif rounded-t nav-link w-full block font-medium text-xs leading-tight uppercase px-6 py-3 hover:border-transparent hover:bg-gray-100 focus:border-transparent ">
+                    E-maily
+                </a>
+            </li>
+            <li class="nav-item flex-grow text-center" role="presentation">
+                <a wire:click.prevent="changeType('IP')" href="#" class="@if($blacklistType === 'IP') text-blue-500 bg-gray-200 @endif rounded-t nav-link w-full block font-medium text-xs leading-tight uppercase px-6 py-3 hover:border-transparent hover:bg-gray-100 focus:border-transparent">
+                    IP adresy
+                </a>
+            </li>
+        </ul>
         <!--<editor-fold desc="SEARCH">-->
         <div class="flex min-w-full justify-between">
             <select wire:model="filter" id="filter" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block w-40 p-2.5">
@@ -20,6 +36,12 @@
                 <table class="min-w-full leading-normal">
                     <thead>
                         <tr>
+                            <th class="text-center px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                <a class="cursor-pointer whitespace-nowrap" wire:click="orderBy('active')">
+                                    Aktivní
+                                    <x-sort-icon field="active" :orderBy="$orderBy" :sortAsc="$sortAsc"/>
+                                </a>
+                            </th>
                             <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                 <a class="cursor-pointer whitespace-nowrap" wire:click="orderBy('value')">
                                     Hodnota
@@ -38,25 +60,31 @@
                                     <x-sort-icon field="created_at" :orderBy="$orderBy" :sortAsc="$sortAsc"/>
                                 </a>
                             </th>
-                            <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                <a class="cursor-pointer whitespace-nowrap" wire:click="orderBy('active')">
-                                    Aktivní
-                                    <x-sort-icon field="active" :orderBy="$orderBy" :sortAsc="$sortAsc"/>
-                                </a>
-                            </th>
-                            <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-gray-700">
+                            <th class="text-right px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                Akce
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($data['data'] as $record)
                             <tr class="odd:bg-white even:bg-slate-50 hover:bg-blue-200/50">
+                                <td class="px-5 py-3 border-b border-gray-200 text-sm text-center">
+                                    <p class="text-gray-900 whitespace-no-wrap text-2xl">
+                                        <a wire:click.prevent="toggleBlacklistRecordActive({{ $record['id'] }})" href="#">
+                                            @if ($record['active'])
+                                                <i class="fa-solid fa-toggle-on text-green-500 hover:text-green-400"></i>
+                                            @else
+                                                <i class="fa-solid fa-toggle-off text-red-500 hover:text-red-400"></i>
+                                            @endif
+                                        </a>
+                                    </p>
+                                </td>
                                 <td class="px-5 py-3 border-b border-gray-200 text-sm">
                                     <p class="text-gray-900 whitespace-no-wrap">
                                         @if(is_array($record['value']))
-                                        {{ implode(' – ', $record['value']) }}
+                                            {{ implode(' – ', $record['value']) }}
                                         @else
-                                        {{ $record['value'] }}
+                                            {{ $record['value'] }}
                                         @endif
                                     </p>
                                 </td>
@@ -68,13 +96,13 @@
                                         {{ \Carbon\Carbon::parse($record['created_at'])->format('d.m.Y') }}
                                     </p>
                                 </td>
-                                <td class="px-5 py-3 border-b border-gray-200 text-sm">
-                                    <p class="text-gray-900 whitespace-no-wrap">{{ $record['active'] }}</p>
-                                </td>
                                 <td class="px-5 py-3 border-b border-gray-200 text-sm text-right">
-                                    <div class="flex space-x-4 justify-end">
-                                        <a class="btn btn-link p-0 cursor-pointer" title="Odstranit uživatele">
-                                            <i class="fa-solid fa-trash-alt text-red-500 hover:text-red-700"></i>
+                                    <div class="flex space-x-4 justify-end text-xl">
+                                        <a wire:click.prevent="$emit('openModal', 'modals.blacklist-update', {{ json_encode(['record' => $record]) }})" href="#" class="btn btn-link p-0 cursor-pointer" title="Upravit záznam">
+                                            <i class="fa-solid fa-pen-to-square text-blue-500 hover:text-blue-400"></i>
+                                        </a>
+                                        <a wire:click.prevent="$emit('openModal', 'modals.confirmation', {{ json_encode(['type' => 'danger', 'title' => 'Odebrání záznamu', 'text' => 'Opravdu si přejete smazat tento záznam?', 'event'=> 'deleteConfirmed', 'passThrough' => ['recordId' => $record['id']]]) }})" href="#" class="btn btn-link p-0 cursor-pointer" title="Odstranit záznam">
+                                            <i class="fa-solid fa-trash-alt text-red-500 hover:text-red-400"></i>
                                         </a>
                                     </div>
                                 </td>
@@ -98,7 +126,7 @@
                 <option value="100">100</option>
             </select>
             <div class="">
-                <x-simple-paginator :next-page="$data['next_page']" :prev-page="$data['prev_page']" />
+                <x-simple-paginator :next-page="$data['next_page']" :prev-page="$data['prev_page']"/>
             </div>
         </div>
     </div>

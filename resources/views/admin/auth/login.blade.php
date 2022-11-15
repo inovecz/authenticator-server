@@ -27,7 +27,7 @@
                         @error('password') <span class="validation-error">{{ $message }}</span> @enderror
                     </div>
                     <div class="flex items-top">
-                        <input id="remember_me" name="remember" type="checkbox"
+                        <input id="remember_me" name="remember" type="checkbox" value="1"
                                class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                         <label for="remember_me" class="ml-2 block text-sm text-gray-900">Zapamatovat přihlášení</label>
                     </div>

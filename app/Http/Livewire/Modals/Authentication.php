@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire\Modals;
 
-use App\Models\User;
 use App\Models\LoginAttemp;
 use App\Services\LoginService;
 use LivewireUI\Modal\ModalComponent;
@@ -21,7 +20,7 @@ class Authentication extends ModalComponent
 
     public function updated($propertyName): void
     {
-        if($this->action === 'register') {
+        if ($this->action === 'register') {
             $this->validateOnly($propertyName, [
                 'name' => 'required|string',
                 'surname' => 'required|string',
@@ -29,15 +28,17 @@ class Authentication extends ModalComponent
                 'password' => ['required', Password::min(8)->letters()->mixedCase()->numbers()->uncompromised()],
                 'password_confirmation' => 'required|same:password'
             ]);
-        } else if ($this->action === 'forgottenPassword') {
-            $this->validateOnly($propertyName, [
-                'email' => 'required|email',
-            ]);
         } else {
-            $this->validateOnly($propertyName, [
-                'email' => 'required|email',
-                'password' => 'required|string'
-            ]);
+            if ($this->action === 'forgottenPassword') {
+                $this->validateOnly($propertyName, [
+                    'email' => 'required|email',
+                ]);
+            } else {
+                $this->validateOnly($propertyName, [
+                    'email' => 'required|email',
+                    'password' => 'required|string'
+                ]);
+            }
         }
     }
 
@@ -54,7 +55,7 @@ class Authentication extends ModalComponent
     public function submit(): void
     {
         $this->loginScoreResponse = null;
-        if($this->action === 'register') {
+        if ($this->action === 'register') {
             $validated = $this->validate([
                 'name' => 'required|string',
                 'surname' => 'required|string',
@@ -62,22 +63,19 @@ class Authentication extends ModalComponent
                 'password' => ['required', Password::min(8)->letters()->mixedCase()->numbers()],
                 'password_confirmation' => 'required|same:password'
             ]);
-
-            // TODO: Solve registration
-        } else if ($this->action === 'forgottenPassword') {
-            $validated = $this->validate([
-                'email' => 'required|email',
-            ]);
-
-            // TODO: Solve forgotten password
         } else {
-            $validated = $this->validate([
-                'email' => 'required|email|exists:users,email',
-                'password' => 'required|string'
-            ]);
-            $scoreEngineService = new ScoreEngineService();
-            $this->loginScoreResponse = $scoreEngineService->score(request(), $validated);
-
+            if ($this->action === 'forgottenPassword') {
+                $validated = $this->validate([
+                    'email' => 'required|email',
+                ]);
+            } else {
+                $validated = $this->validate([
+                    'email' => 'required|email|exists:users,email',
+                    'password' => 'required|string'
+                ]);
+                $scoreEngineService = new ScoreEngineService();
+                $this->loginScoreResponse = $scoreEngineService->score(request(), $validated);
+            }
         }
     }
 }

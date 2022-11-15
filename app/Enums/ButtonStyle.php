@@ -13,6 +13,7 @@ enum ButtonStyle: string
     case SUCCESS = 'success';
     case WARNING = 'warning';
     case DANGER = 'danger';
+    case TEXT = 'text';
 
     public function getClass(): string
     {
@@ -23,6 +24,7 @@ enum ButtonStyle: string
             self::SUCCESS => 'text-white bg-emerald-500 hover:bg-emerald-600 rounded border border-emerald-600 focus:ring-emerald-500',
             self::WARNING => 'text-white bg-amber-500 hover:bg-amber-600 rounded border border-amber-600 focus:ring-amber-500',
             self::DANGER => 'text-white bg-red-500 hover:bg-red-600 rounded border border-red-600 focus:ring-red-500',
+            self::TEXT => 'text-slate-500 hover:text-slate-400 underline'
         };
     }
 }

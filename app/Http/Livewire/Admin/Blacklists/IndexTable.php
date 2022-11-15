@@ -5,7 +5,6 @@ namespace App\Http\Livewire\Admin\Blacklists;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Services\ScoreEngineService;
-use Illuminate\Pagination\Paginator;
 
 class IndexTable extends Component
 {
@@ -18,20 +17,31 @@ class IndexTable extends Component
     public array $filters = ['all' => 'Vše', 'value' => 'Hodnota', 'reason' => 'Důvod'];
     public string $filter = 'all';
 
-    protected string $blacklistType = 'DOMAIN';
+    public string $blacklistType = 'DOMAIN';
+    protected array $blacklistTypes = ['DOMAIN', 'EMAIL', 'IP'];
     protected array $data = [];
 
     protected $queryString = ['page', 'filter', 'search', 'orderBy', 'sortAsc'];
 
-    public function mount(string $blacklistType)
+    protected $listeners = [
+        'refreshList' => '$refresh',
+        'blacklistUpdated' => 'blacklistUpdated',
+        'deleteConfirmed' => 'deleteBlacklistRecord'
+    ];
+
+    public function mount(string $blacklistType = 'DOMAIN'): void
     {
         $this->blacklistType = $blacklistType;
     }
 
-    public function render()
+    public function orderBy($field): void
     {
-        $this->fetchRemoteData();
-        return view('livewire.admin.blacklists.index-table', ['data' => $this->data]);
+        if ($field === $this->orderBy) {
+            $this->sortAsc = !$this->sortAsc;
+        } else {
+            $this->sortAsc = true;
+        }
+        $this->orderBy = $field;
     }
 
     public function updatingSearch(): void
@@ -44,9 +54,47 @@ class IndexTable extends Component
         $this->resetPage();
     }
 
+    public function changeType(string $type): void
+    {
+        $this->blacklistType = !in_array($type, $this->blacklistTypes, true) ? 'DOMAIN' : $type;
+        $this->render();
+    }
+
+    public function render()
+    {
+        $this->fetchRemoteData();
+        return view('livewire.admin.blacklists.index-table', ['data' => $this->data]);
+    }
+
     private function fetchRemoteData(): void
     {
         $scoreEngineService = new ScoreEngineService();
         $this->data = $scoreEngineService->fetchBlacklistDatatable($this->blacklistType, $this->pageLength, $this->page, $this->filter, $this->search, $this->orderBy, $this->sortAsc);
+    }
+
+    public function toggleBlacklistRecordActive(int $blacklistRecordId): void
+    {
+        $scoreEngineService = new ScoreEngineService();
+        $updatedRecord = $scoreEngineService->toggleBlacklistRecordActive($blacklistRecordId);
+        $this->data = array_map(static fn(array $record) => $record['id'] === $blacklistRecordId ? $record['active'] = $updatedRecord['active'] : null, $this->data);
+        $this->render();
+    }
+
+    public function deleteBlacklistRecord(array $passThrough): void
+    {
+        $blacklistRecordId = $passThrough['recordId'] ?? null;
+        if (!$blacklistRecordId) {
+            return;
+        }
+        $scoreEngineService = new ScoreEngineService();
+        $scoreEngineService->deleteBlacklistRecord($blacklistRecordId);
+        $this->fetchRemoteData();
+        $this->render();
+    }
+
+    public function blacklistUpdated(array $blacklist): void
+    {
+        $this->data = array_map(static fn(array $record) => $record['id'] === $blacklist['id'] ? $blacklist : $record, $this->data);
+        $this->render();
     }
 }
