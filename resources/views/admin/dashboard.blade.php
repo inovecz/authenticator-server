@@ -24,7 +24,7 @@
         </div>
     </div>
 
-    <div class="mt-10 lg:max-w-screen-xl border border-gray-200 rounded bg-white mx-4 flex px-4">
+    <div class="mx-auto mt-10 lg:max-w-screen-xl border border-gray-200 rounded bg-white flex px-4">
         <div class="grow">
             <div class="text-3xl font-extralight py-2">Blacklist</div>
             <div class="grid grid-cols-3 py-2 text-lg">

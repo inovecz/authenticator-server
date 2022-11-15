@@ -1,5 +1,11 @@
 <div class="rounded-lg bg-white border border-blue-300 overflow-hidden">
-    <div class="text-lg bg-blue-100 text-blue-700 px-4 py-2 border-b border-blue-300">Úprava záznamu</div>
+    <div class="text-lg bg-blue-100 text-blue-700 px-4 py-2 border-b border-blue-300">
+        @if($record)
+            Úprava záznamu
+        @else
+            Nový záznam
+        @endif
+    </div>
     <form wire:submit.prevent="submit" class="p-4 space-y-6">
         <div class="flex flex-col gap-4">
             <input type="hidden" wire:model="blacklistId">
@@ -19,7 +25,7 @@
                 <label for="active" class="ml-2 block text-sm text-gray-900">Aktivní</label>
             </div>
             <div class="flex justify-end">
-                <x-button type="button" button="text">Zrušit</x-button>
+                <x-button wire:click="cancel()" type="button" button="text">Zrušit</x-button>
                 <x-button type="submit" button="primary">Uložit</x-button>
             </div>
         </div>

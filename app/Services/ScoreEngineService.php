@@ -69,11 +69,22 @@ class ScoreEngineService
         return false;
     }
 
-    public function updateBlacklistRecord(int $id, string $type, string $value, ?string $reason, bool $active): array
+    /**
+     * @throws \Exception
+     */
+    public function updateBlacklistRecord(?int $id, string $type, string $value, ?string $reason, bool $active = false): array
     {
-        $response = Http::post(config('app.scoring_engine_api').'/blacklists', compact('id', 'type', 'value', 'reason', 'active'));
+        $data = compact('type', 'value', 'reason', 'active');
+        if ($id) {
+            $data = array_merge(['id' => $id], $data);
+        }
+        $response = Http::post(config('app.scoring_engine_api').'/blacklists', $data);
         if ($response->successful()) {
             return $response->json();
+        }
+        if ($response->clientError()) {
+            $error = $response->json()['error'];
+            throw new \Exception($error);
         }
         return [];
     }

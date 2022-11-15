@@ -1,5 +1,6 @@
 <div class="container mx-auto">
     <div class="">
+        <h2 class="text-4xl mb-4">Blacklisty</h2>
         <ul class="nav nav-tabs nav-justified flex flex-col md:flex-row flex-wrap list-none border-b border-gray-300 pl-0 mb-4" id="tabs-tabJustify" role="tablist">
             <li class="nav-item flex-grow text-center" role="presentation">
                 <a wire:click.prevent="changeType('DOMAIN')" href="#" class="@if($blacklistType === 'DOMAIN') text-blue-500 bg-gray-200 @endif rounded-t nav-link w-full block font-medium text-xs leading-tight uppercase px-6 py-3 hover:border-transparent focus:border-transparent">
@@ -27,6 +28,7 @@
             <div class="flex-1">
                 <input wire:model.debounce.500ms="search" type="text" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Vyhledat...">
             </div>
+            <x-button :click="'Livewire.emit(\'openModal\', \'modals.blacklist-update\', {\'forcedType\': \'' . $blacklistType . '\'})'" button="primary" class="ml-4" awesome-icon="fa-solid fa-plus">Přidat</x-button>
         </div>
 
         <!--</editor-fold desc="SEARCH">-->

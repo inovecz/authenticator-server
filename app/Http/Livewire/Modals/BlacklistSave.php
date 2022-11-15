@@ -7,7 +7,7 @@ namespace App\Http\Livewire\Modals;
 use LivewireUI\Modal\ModalComponent;
 use App\Services\ScoreEngineService;
 
-class BlacklistUpdate extends ModalComponent
+class BlacklistSave extends ModalComponent
 {
     public ?array $record = null;
     public ?int $blacklistId = null;
@@ -16,9 +16,12 @@ class BlacklistUpdate extends ModalComponent
     public ?string $reason = null;
     public ?bool $active = null;
 
-    public function mount(?array $record): void
+    public function mount(?array $record = null, string $forcedType = null): void
     {
         $this->record = $record;
+        if ($forcedType) {
+            $this->type = $forcedType;
+        }
         if ($record) {
             $this->blacklistId = $record['id'];
             $this->type = $record['type'];
@@ -30,13 +33,25 @@ class BlacklistUpdate extends ModalComponent
 
     public function render()
     {
-        return view('livewire.modals.blacklist-update');
+        return view('livewire.modals.blacklist-save');
+    }
+
+    public function cancel(): void
+    {
+        $this->closeModal();
     }
 
     public function submit(): void
     {
         $scoreEngineService = new ScoreEngineService();
-        $blacklistRecord = $scoreEngineService->updateBlacklistRecord($this->blacklistId, $this->type, $this->value, $this->reason, $this->active);
+        try {
+            $blacklistRecord = $scoreEngineService->updateBlacklistRecord($this->blacklistId, $this->type, $this->value, $this->reason, $this->active ?? false);
+        } catch (\Exception $e) {
+            if ($e->getMessage() === 'blacklist.type_value_combination_exists') {
+                $this->addError('value', 'Tato hodnota již existuje');
+            }
+            return;
+        }
 
         $this->emit('blacklistUpdated', $blacklistRecord);
         $this->closeModal();
