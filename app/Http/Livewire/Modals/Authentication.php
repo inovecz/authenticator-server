@@ -26,7 +26,7 @@ class Authentication extends ModalComponent
                 'surname' => 'required|string',
                 'email' => 'required|email',
                 'password' => ['required', Password::min(8)->letters()->mixedCase()->numbers()->uncompromised()],
-                'password_confirmation' => 'required|same:password'
+                'password_confirmation' => 'required|same:password',
             ]);
         } else {
             if ($this->action === 'forgottenPassword') {
@@ -36,7 +36,7 @@ class Authentication extends ModalComponent
             } else {
                 $this->validateOnly($propertyName, [
                     'email' => 'required|email',
-                    'password' => 'required|string'
+                    'password' => 'required|string',
                 ]);
             }
         }
@@ -61,7 +61,7 @@ class Authentication extends ModalComponent
                 'surname' => 'required|string',
                 'email' => 'required|email',
                 'password' => ['required', Password::min(8)->letters()->mixedCase()->numbers()],
-                'password_confirmation' => 'required|same:password'
+                'password_confirmation' => 'required|same:password',
             ]);
         } else {
             if ($this->action === 'forgottenPassword') {
@@ -71,10 +71,20 @@ class Authentication extends ModalComponent
             } else {
                 $validated = $this->validate([
                     'email' => 'required|email|exists:users,email',
-                    'password' => 'required|string'
+                    'password' => 'required|string',
                 ]);
                 $scoreEngineService = new ScoreEngineService();
                 $this->loginScoreResponse = $scoreEngineService->score(request(), $validated);
+                if (isset($this->loginScoreResponse['error'])) {
+                    if ($this->loginScoreResponse['error'] === 'Entity is blacklisted') {
+                        $reason = match ($this->loginScoreResponse['blacklist_type']) {
+                            'IP' => 'zakázané IP adresy',
+                            'DOMAIN' => 'zakázané domény',
+                            'EMAIL' => 'zakázaného e-mailu',
+                        };
+                        $this->addError('scoring_engine', 'Přihlášení z Vašeho účtu je blokováno z důvodu '.$reason.'.');
+                    }
+                }
             }
         }
     }

@@ -21,18 +21,13 @@ class IndexTable extends Component
     protected array $blacklistTypes = ['DOMAIN', 'EMAIL', 'IP'];
     protected array $data = [];
 
-    protected $queryString = ['page', 'filter', 'search', 'orderBy', 'sortAsc'];
+    protected $queryString = ['blacklistType', 'page', 'filter', 'search', 'orderBy', 'sortAsc'];
 
     protected $listeners = [
         'refreshList' => '$refresh',
         'blacklistUpdated' => 'blacklistUpdated',
-        'deleteConfirmed' => 'deleteBlacklistRecord'
+        'deleteConfirmed' => 'deleteBlacklistRecord',
     ];
-
-    public function mount(string $blacklistType = 'DOMAIN'): void
-    {
-        $this->blacklistType = $blacklistType;
-    }
 
     public function orderBy($field): void
     {

@@ -15,7 +15,6 @@ class ScoreEngineService
         $start = microtime(true);
         $user = User::where('email', $data['email'])->first();
         $data['hash'] = $user->getHash();
-        unset($data['email']);
         $data['user-agent'] = $request->userAgent();
         $data['ip'] = $request->getClientIp();
         $response = Http::post(config('app.scoring_engine_api').'/score-login', $data);

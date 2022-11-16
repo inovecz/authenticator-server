@@ -87,6 +87,8 @@
                 </div>
             </div>
 
+            @error('scoring_engine') <span class="validation-error">{{ $message }}</span> @enderror
+
             @switch($action)
                 @case('register')
                     <x-button type="submit" button="primary" awesome-icon="fa-solid fa-user-plus" wide>Registrovat se</x-button>

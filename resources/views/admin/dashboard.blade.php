@@ -24,21 +24,23 @@
         </div>
     </div>
 
-    <div class="mx-auto mt-10 lg:max-w-screen-xl border border-gray-200 rounded bg-white flex px-4">
+    <div class="mx-auto mt-10 lg:max-w-screen-xl flex px-4">
+        <div class="text-3xl font-extralight py-2">Přístupy na blacklist</div>
+    </div>
+    <div class="mx-auto lg:max-w-screen-xl border border-gray-200 rounded bg-white flex px-4">
         <div class="grow">
-            <div class="text-3xl font-extralight py-2">Blacklist</div>
             <div class="grid grid-cols-3 py-2 text-lg">
-                <div>
-                    <span class="text-xl text-gray-700 leading-wide">IP adresy:</span>
-                    <span class="text-xl font-bold text-gray-900">{{ $blacklistCount['IP'] }}</span>
+                <div class="text-center">
+                    <div class="text-xl text-gray-700 leading-wide">IP adresy:</div>
+                    <div class="text-3xl font-bold text-gray-900">{{ $blacklistCount['IP'] }}</div>
                 </div>
-                <div>
-                    <span class="text-xl text-gray-700 leading-wide">Domény:</span>
-                    <span class="text-xl font-bold text-gray-900">{{ $blacklistCount['DOMAIN'] }}</span>
+                <div class="text-center">
+                    <div class="text-xl text-gray-700 leading-wide">Domény:</div>
+                    <div class="text-3xl font-bold text-gray-900">{{ $blacklistCount['DOMAIN'] }}</div>
                 </div>
-                <div>
-                    <span class="text-xl text-gray-700 leading-wide">Emaily:</span>
-                    <span class="text-xl font-bold text-gray-900">{{ $blacklistCount['EMAIL'] }}</span>
+                <div class="text-center">
+                    <div class="text-xl text-gray-700 leading-wide">Emaily:</div>
+                    <div class="text-3xl font-bold text-gray-900">{{ $blacklistCount['EMAIL'] }}</div>
                 </div>
             </div>
         </div>
