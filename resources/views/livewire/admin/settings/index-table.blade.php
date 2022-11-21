@@ -12,8 +12,8 @@
                         </div>
                         <div>
                             <label class="inline-flex relative items-center mr-5 cursor-pointer">
-                                <input wire:model="{{ $setting['setting'] }}" type="checkbox" class="sr-only peer">
-                                <div wire:click="updateSetting('{{ $setting['setting'] }}')" class="switch-div peer"></div>
+                                <input wire:model="{{ dot_to_varname($setting['setting']) }}" type="checkbox" class="sr-only peer">
+                                <div wire:click="updateSetting('{{ dot_to_varname($setting['setting']) }}')" class="switch-div peer"></div>
                             </label>
                         </div>
                     </li>

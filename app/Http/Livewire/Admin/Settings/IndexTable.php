@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Livewire\Admin\Settings;
 
 use Livewire\Component;
-use Illuminate\Support\Str;
 use App\Services\ScoreEngineService;
 
 class IndexTable extends Component
@@ -18,17 +17,31 @@ class IndexTable extends Component
                 [
                     'title' => 'Databáze úniků',
                     'subtitle' => 'Kontrolovat heslo na výskyt v databázi úniků <a href="https://haveibeenpwned.com" class="link" target="_blank">haveibeewnpwned.com</a>',
-                    'setting' => 'scoringPasswordLeaks',
+                    'setting' => 'scoring.password.leaks',
                 ],
                 [
                     'title' => 'Délka',
                     'subtitle' => 'Kontrolovat délku hesla',
-                    'setting' => 'scoringPasswordLength',
+                    'setting' => 'scoring.password.length',
                 ],
                 [
-                    'title' => 'Složitost',
-                    'subtitle' => 'Kontrolovat složitost hesla',
-                    'setting' => 'scoringPasswordComplexity',
+                    'title' => 'Znaky - čísla',
+                    'subtitle' => 'Kontrolovat zda heslo obsahuje čísla 0-9',
+                    'setting' => 'scoring.password.complexity.numbers',
+                ],
+                [
+                    'title' => 'Znaky - písmena',
+                    'subtitle' => 'Kontrolovat zda heslo obsahuje písmena a-ž, A-Ž',
+                    'setting' => 'scoring.password.complexity.letters',
+                ],
+                [
+                    'title' => 'Znaky - malá a velká písmena',
+                    'subtitle' => 'Kontrolovat zda heslo obsahuje malá i velká písmena',
+                    'setting' => 'scoring.password.complexity.mixed_case',
+                ], [
+                    'title' => 'Znaky - symboly',
+                    'subtitle' => 'Kontrolovat zda heslo obsahuje symboly, např. !?#$&…',
+                    'setting' => 'scoring.password.complexity.symbols',
                 ],
             ],
         ],
@@ -37,27 +50,41 @@ class IndexTable extends Component
             'subtitle' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. A alias assumenda hic natus optio?',
             'items' => [
                 [
+                    'title' => 'Uniklé e-maily',
+                    'subtitle' => 'Kontrolovat e-mail proti databázi uniklých e-mailů',
+                    'setting' => 'scoring.entity.leaks.email',
+                ],
+                [
+                    'title' => 'Uniklá telefonní čísla',
+                    'subtitle' => 'Kontrolovat telefonní číslo proti databázi uniklých telefonních čísel',
+                    'setting' => 'scoring.entity.leaks.phone',
+                ],
+                [
+                    'title' => 'Dočasné e-maily',
+                    'subtitle' => 'Kontrolovat e-mail proti databázi dočasných e-mailových domén',
+                    'setting' => 'scoring.entity.disposable_email',
+                ],
+                [
                     'title' => 'Geodata',
                     'subtitle' => 'Kontrolovat přihlášení z obvyklé lokace',
-                    'setting' => 'scoringEntityGeodata',
+                    'setting' => 'scoring.entity.geodata',
                 ],
                 [
                     'title' => 'Zařízení',
                     'subtitle' => 'Kontrolovat přihlášení z obvyklého zařízení',
-                    'setting' => 'scoringEntityDevice',
+                    'setting' => 'scoring.entity.device',
                 ],
             ],
         ],
     ];
 
-    public ?bool $scoringPasswordLeaks = null;
-    public ?bool $scoringPasswordLength = null;
-    public ?bool $scoringPasswordComplexity = null;
-    public ?bool $scoringEntityGeodata = null;
-    public ?bool $scoringEntityDevice = null;
-
     public function mount(): void
     {
+        foreach ($this->settings as $group) {
+            foreach ($group['items'] as $setting) {
+                $this->fill([dot_to_varname($setting['setting']) => false]);
+            }
+        }
         $this->fetchSettings();
     }
 
@@ -72,11 +99,17 @@ class IndexTable extends Component
         $settings = $scoreEngineService->fetchSettings();
 
         if ($settings !== false) {
-            $this->scoringPasswordLeaks = $settings['scoring']['password']['leaks'] ?? null;
-            $this->scoringPasswordLength = $settings['scoring']['password']['length'] ?? null;
-            $this->scoringPasswordComplexity = $settings['scoring']['password']['complexity'] ?? null;
-            $this->scoringEntityGeodata = $settings['scoring']['entity']['geodata'] ?? null;
-            $this->scoringEntityDevice = $settings['scoring']['entity']['device'] ?? null;
+            foreach ($this->settings as $indexG => $group) {
+                foreach ($group['items'] as $indexS => $setting) {
+                    $varName = dot_to_varname($setting['setting']);
+                    $settingItem = $settings;
+                    $exploded = explode('.', $setting['setting']);
+                    collect($exploded)->each(function ($key) use (&$settingItem, $indexG, $indexS) {
+                        $settingItem = $settingItem[$key] ?? false;
+                    });
+                    $this->{$varName} = $settingItem;
+                }
+            }
         } else {
             $this->dispatchBrowserEvent('alert', ['type' => 'error', 'message' => 'Nepodařilo se načíst nastavení', 'options' => ['timeOut' => 5000]]);
         }
@@ -85,7 +118,7 @@ class IndexTable extends Component
     public function updateSetting(string $key): void
     {
         $value = $this->$key;
-        $key = Str::of($key)->snake()->replace('_', '.')->toString();
+        $key = varname_to_dot($key);
         $scoreEngineService = new ScoreEngineService();
         $updated = $scoreEngineService->updateSetting($key, $value);
         if ($updated) {
