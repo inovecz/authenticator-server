@@ -44,15 +44,7 @@ class BlacklistSave extends ModalComponent
     public function submit(): void
     {
         $scoreEngineService = new ScoreEngineService();
-        try {
-            $blacklistRecord = $scoreEngineService->updateBlacklistRecord($this->blacklistId, $this->type, $this->value, $this->reason, $this->active ?? false);
-        } catch (\Exception $e) {
-            if ($e->getMessage() === 'blacklist.type_value_combination_exists') {
-                $this->addError('value', 'Tato hodnota již existuje');
-            }
-            return;
-        }
-
+        $blacklistRecord = $scoreEngineService->updateBlacklistRecord($this->blacklistId, $this->type, $this->value, $this->reason, $this->active ?? false);
         $this->emit('blacklistUpdated', $blacklistRecord);
         $this->closeModal();
     }

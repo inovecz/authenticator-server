@@ -50,13 +50,13 @@ class ScoreEngineService
         return [];
     }
 
-    public function toggleBlacklistRecordActive(int $blacklistId): array
+    public function toggleBlacklistRecordActive(int $blacklistId): array|false
     {
         $response = Http::get(config('app.scoring_engine_api').'/blacklists/'.$blacklistId.'/toggle-active');
         if ($response->successful()) {
             return $response->json();
         }
-        return [];
+        return false;
     }
 
     public function deleteBlacklistRecord(int $blacklistId): bool
@@ -68,10 +68,7 @@ class ScoreEngineService
         return false;
     }
 
-    /**
-     * @throws \Exception
-     */
-    public function updateBlacklistRecord(?int $id, string $type, string $value, ?string $reason, bool $active = false): array
+    public function updateBlacklistRecord(?int $id, string $type, string $value, ?string $reason, bool $active = false): array|false
     {
         $data = compact('type', 'value', 'reason', 'active');
         if ($id) {
@@ -81,10 +78,27 @@ class ScoreEngineService
         if ($response->successful()) {
             return $response->json();
         }
-        if ($response->clientError()) {
-            $error = $response->json()['error'];
-            throw new \Exception($error);
+        return false;
+    }
+
+    public function fetchSettings(): array|false
+    {
+        $response = Http::get(config('app.scoring_engine_api').'/settings');
+        if ($response->successful()) {
+            return $response->json();
         }
-        return [];
+        return false;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function updateSetting(string $key, mixed $value): bool
+    {
+        $response = Http::post(config('app.scoring_engine_api').'/settings', compact('key', 'value'));
+        if ($response->clientError()) {
+            return false;
+        }
+        return true;
     }
 }

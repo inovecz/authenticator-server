@@ -100,7 +100,7 @@
                                 </td>
                                 <td class="px-5 py-3 border-b border-gray-200 text-sm text-right">
                                     <div class="flex space-x-4 justify-end text-xl">
-                                        <a wire:click.prevent="$emit('openModal', 'modals.blacklist-update', {{ json_encode(['record' => $record]) }})" href="#" class="btn btn-link p-0 cursor-pointer" title="Upravit záznam">
+                                        <a wire:click.prevent="$emit('openModal', 'modals.blacklist-save', {{ json_encode(['record' => $record]) }})" href="#" class="btn btn-link p-0 cursor-pointer" title="Upravit záznam">
                                             <i class="fa-solid fa-pen-to-square text-blue-500 hover:text-blue-400"></i>
                                         </a>
                                         <a wire:click.prevent="$emit('openModal', 'modals.confirmation', {{ json_encode(['type' => 'danger', 'title' => 'Odebrání záznamu', 'text' => 'Opravdu si přejete smazat tento záznam?', 'event'=> 'deleteConfirmed', 'passThrough' => ['recordId' => $record['id']]]) }})" href="#" class="btn btn-link p-0 cursor-pointer" title="Odstranit záznam">

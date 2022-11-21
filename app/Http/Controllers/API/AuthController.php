@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API;
 use Str;
 use Hash;
 use App\Models\User;
-use App\Enums\GenderEnum;
 use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
 use Illuminate\Http\JsonResponse;
@@ -19,7 +18,6 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use App\Http\Requests\UserRegisterRequest;
 use App\Http\Requests\ResetPasswordRequest;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 class AuthController extends Controller
 {
@@ -170,7 +168,7 @@ class AuthController extends Controller
             $request->only('email', 'password', 'password_confirmation', 'token'),
             static function ($user, $password) {
                 $user->forceFill([
-                    'password' => Hash::make($password)
+                    'password' => Hash::make($password),
                 ])->setRememberToken(Str::random(60));
 
                 $user->save();

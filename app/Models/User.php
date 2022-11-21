@@ -1,17 +1,20 @@
 <?php
+
 declare(strict_types=1);
+
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Carbon\Carbon;
 use App\Enums\GenderEnum;
+use Illuminate\Support\Str;
 use App\Models\Traits\ModelTrait;
+use Laravel\Sanctum\HasApiTokens;
 use App\Models\Traits\HashableTrait;
 use App\Models\Traits\ResourceTrait;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -23,7 +26,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'last_attemp_at' => 'datetime',
-        'gender' => GenderEnum::class
+        'gender' => GenderEnum::class,
     ];
     // </editor-fold desc="Region: STATE DEFINITION">
 
@@ -68,7 +71,10 @@ class User extends Authenticatable implements MustVerifyEmail
     // <editor-fold desc="Region: COMPUTED GETTERS">
     public function getFullName(bool $reverse = false, bool $ascii = false): string
     {
-        $fullname = collect([$this->getName($ascii), $this->getSurname($ascii)]);
+        $fullname = collect([$this->getName(), $this->getSurname()]);
+        if ($ascii) {
+            $fullname->each(fn(string $string) => Str::ascii($string));
+        }
         return $reverse ? $fullname->reverse()->implode(' ') : $fullname->implode(' ');
     }
     // </editor-fold desc="Region: COMPUTED GETTERS">

@@ -71,8 +71,13 @@ class IndexTable extends Component
     {
         $scoreEngineService = new ScoreEngineService();
         $updatedRecord = $scoreEngineService->toggleBlacklistRecordActive($blacklistRecordId);
-        $this->data = array_map(static fn(array $record) => $record['id'] === $blacklistRecordId ? $record['active'] = $updatedRecord['active'] : null, $this->data);
-        $this->render();
+        if ($updatedRecord !== false) {
+            $this->data = array_map(static fn(array $record) => $record['id'] === $blacklistRecordId ? $record['active'] = $updatedRecord['active'] : null, $this->data);
+            $this->render();
+            $this->dispatchBrowserEvent('alert', ['type' => 'success', 'message' => 'Záznam byl úspěšně uložen', 'options' => ['timeOut' => 1000]]);
+        } else {
+            $this->dispatchBrowserEvent('alert', ['type' => 'danger', 'message' => 'Záznam nebylo možné uložit', 'options' => ['timeOut' => 5000]]);
+        }
     }
 
     public function deleteBlacklistRecord(array $passThrough): void
@@ -82,14 +87,24 @@ class IndexTable extends Component
             return;
         }
         $scoreEngineService = new ScoreEngineService();
-        $scoreEngineService->deleteBlacklistRecord($blacklistRecordId);
-        $this->fetchRemoteData();
-        $this->render();
+        $deleted = $scoreEngineService->deleteBlacklistRecord($blacklistRecordId);
+        if ($deleted) {
+            $this->fetchRemoteData();
+            $this->render();
+            $this->dispatchBrowserEvent('alert', ['type' => 'success', 'message' => 'Záznam byl úspěšně smazán', 'options' => ['timeOut' => 1000]]);
+        } else {
+            $this->dispatchBrowserEvent('alert', ['type' => 'danger', 'message' => 'Záznam nebylo možné smazat', 'options' => ['timeOut' => 5000]]);
+        }
     }
 
-    public function blacklistUpdated(array $blacklist): void
+    public function blacklistUpdated(array|false $blacklist): void
     {
-        $this->data = array_map(static fn(array $record) => $record['id'] === $blacklist['id'] ? $blacklist : $record, $this->data);
-        $this->render();
+        if ($blacklist !== false) {
+            $this->data = array_map(static fn(array $record) => $record['id'] === $blacklist['id'] ? $blacklist : $record, $this->data);
+            $this->render();
+            $this->dispatchBrowserEvent('alert', ['type' => 'success', 'message' => 'Záznam byl úspěšně uložen', 'options' => ['timeOut' => 1000]]);
+        } else {
+            $this->dispatchBrowserEvent('alert', ['type' => 'danger', 'message' => 'Záznam nebylo možné uložit', 'options' => ['timeOut' => 5000]]);
+        }
     }
 }
