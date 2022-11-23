@@ -11,68 +11,123 @@ class IndexTable extends Component
 {
     public array $settings = [
         [
-            'title' => 'Kontrola hesel',
-            'subtitle' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. A alias assumenda hic natus optio?',
+            'title' => 'Přihlášení',
+            'subtitle' => 'Podmínky, za kterých nebude uživateli umožněno se přihlásit. Pokud je některá podmínka vypnuta, je přítomnost na blacklistu hodnocena dle nastavení kontroly identity.',
             'items' => [
                 [
-                    'title' => 'Databáze úniků',
+                    'title' => 'Blokovat přihlášení zakázaným e-mailem',
+                    'subtitle' => 'Pokud je e-mail v blacklistu e-mailů',
+                    'setting' => 'deny_login.blacklist.email',
+                    'type' => 'bool',
+                ],
+                [
+                    'title' => 'Blokovat přihlášení e-mailem se zakázené domény',
+                    'subtitle' => 'Pokud je doména e-mailu v blacklistu domén',
+                    'setting' => 'deny_login.blacklist.domain',
+                    'type' => 'bool',
+                ],
+                [
+                    'title' => 'Blokovat přihlášení ze zakázané IP adresy',
+                    'subtitle' => 'Pokud je IP adresa klienta v blacklistu IP adres',
+                    'setting' => 'deny_login.blacklist.ip',
+                    'type' => 'bool',
+                ],
+                [
+                    'title' => 'Práh vyžádání dvoufaktoru',
+                    'subtitle' => 'Pokud hodnota skóre překročí danou mez (včetně), je požadováno ověření pomocí kódu',
+                    'setting' => 'scoring.twofactor_when_score_gte',
+                    'type' => 'integer',
+                    'range' => [0, 100],
+                ],
+                [
+                    'title' => 'Práh blokace přihlášení',
+                    'subtitle' => 'Pokud hodnota skóre překročí danou mez (včetně), je přihlášení zablokováno',
+                    'setting' => 'scoring.disallow_when_score_gte',
+                    'type' => 'integer',
+                    'range' => [0, 100],
+                ],
+            ],
+        ],
+        [
+            'title' => 'Kontrola hesel',
+            'subtitle' => 'Přihlašovací hesla jsou hodnocena následujícími pravidly:',
+            'items' => [
+                [
+                    'title' => 'Uniklá hesla',
                     'subtitle' => 'Kontrolovat heslo na výskyt v databázi úniků <a href="https://haveibeenpwned.com" class="link" target="_blank">haveibeewnpwned.com</a>',
                     'setting' => 'scoring.password.leaks',
+                    'type' => 'bool',
                 ],
                 [
                     'title' => 'Délka',
                     'subtitle' => 'Kontrolovat délku hesla',
                     'setting' => 'scoring.password.length',
+                    'type' => 'bool',
                 ],
                 [
                     'title' => 'Znaky - čísla',
                     'subtitle' => 'Kontrolovat zda heslo obsahuje čísla 0-9',
                     'setting' => 'scoring.password.complexity.numbers',
+                    'type' => 'bool',
                 ],
                 [
                     'title' => 'Znaky - písmena',
                     'subtitle' => 'Kontrolovat zda heslo obsahuje písmena a-ž, A-Ž',
                     'setting' => 'scoring.password.complexity.letters',
+                    'type' => 'bool',
                 ],
                 [
                     'title' => 'Znaky - malá a velká písmena',
                     'subtitle' => 'Kontrolovat zda heslo obsahuje malá i velká písmena',
                     'setting' => 'scoring.password.complexity.mixed_case',
+                    'type' => 'bool',
                 ], [
                     'title' => 'Znaky - symboly',
                     'subtitle' => 'Kontrolovat zda heslo obsahuje symboly, např. !?#$&…',
                     'setting' => 'scoring.password.complexity.symbols',
+                    'type' => 'bool',
                 ],
             ],
         ],
         [
             'title' => 'Kontrola identity',
-            'subtitle' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. A alias assumenda hic natus optio?',
+            'subtitle' => 'Přihlašující se uživatel je hodnocen následujícími pravidly:',
             'items' => [
                 [
                     'title' => 'Uniklé e-maily',
                     'subtitle' => 'Kontrolovat e-mail proti databázi uniklých e-mailů',
                     'setting' => 'scoring.entity.leaks.email',
+                    'type' => 'bool',
                 ],
                 [
                     'title' => 'Uniklá telefonní čísla',
                     'subtitle' => 'Kontrolovat telefonní číslo proti databázi uniklých telefonních čísel',
                     'setting' => 'scoring.entity.leaks.phone',
+                    'type' => 'bool',
                 ],
                 [
                     'title' => 'Dočasné e-maily',
                     'subtitle' => 'Kontrolovat e-mail proti databázi dočasných e-mailových domén',
                     'setting' => 'scoring.entity.disposable_email',
+                    'type' => 'bool',
                 ],
                 [
                     'title' => 'Geodata',
                     'subtitle' => 'Kontrolovat přihlášení z obvyklé lokace',
                     'setting' => 'scoring.entity.geodata',
+                    'type' => 'bool',
                 ],
                 [
                     'title' => 'Zařízení',
                     'subtitle' => 'Kontrolovat přihlášení z obvyklého zařízení',
                     'setting' => 'scoring.entity.device',
+                    'type' => 'bool',
+                ],
+                [
+                    'title' => 'Blacklist',
+                    'subtitle' => 'Kontrola na výskyt v blacklistu (pokud není přihlášení automaticky odmítnuto)',
+                    'setting' => 'scoring.entity.blacklist',
+                    'type' => 'bool',
                 ],
             ],
         ],

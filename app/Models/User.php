@@ -13,6 +13,7 @@ use App\Models\Traits\HashableTrait;
 use App\Models\Traits\ResourceTrait;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -29,6 +30,13 @@ class User extends Authenticatable implements MustVerifyEmail
         'gender' => GenderEnum::class,
     ];
     // </editor-fold desc="Region: STATE DEFINITION">
+
+    // <editor-fold desc="Region: RELATIONS">\
+    public function verificationCode(): HasOne
+    {
+        return $this->hasOne(VerificationCode::class)->orderByDesc('created_at');
+    }
+    // </editor-fold desc="Region: RELATIONS">
 
     // <editor-fold desc="Region: GETTERS">
     public function getName(): string

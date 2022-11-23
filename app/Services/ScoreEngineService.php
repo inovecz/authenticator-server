@@ -40,14 +40,14 @@ class ScoreEngineService
         return ['IP' => 'N/A', 'DOMAIN' => 'N/A', 'EMAIL' => 'N/A'];
     }
 
-    public function fetchBlacklistDatatable(string $type, int $pageLength = 10, int $page = 0, string $filter = 'all', string $search = '', string $orderBy = 'id', bool $sortAsc = false): array
+    public function fetchBlacklistDatatable(string $type, int $pageLength = 10, int $page = 0, string $filter = 'all', string $search = '', string $orderBy = 'id', bool $sortAsc = false): array|false
     {
         $data = compact('pageLength', 'page', 'filter', 'search', 'orderBy', 'sortAsc');
         $response = Http::post(config('app.scoring_engine_api').'/blacklists/'.$type.'/datatable', $data);
         if ($response->successful()) {
             return $response->json();
         }
-        return [];
+        return false;
     }
 
     public function toggleBlacklistRecordActive(int $blacklistId): array|false

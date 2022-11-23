@@ -15,6 +15,7 @@ use Illuminate\Auth\Events\Verified;
 use Illuminate\Auth\Events\Registered;
 use App\Http\Requests\UserLoginRequest;
 use Illuminate\Support\Facades\Password;
+use App\Http\Requests\AdminLoginRequest;
 use Illuminate\Auth\Events\PasswordReset;
 use App\Http\Requests\UserRegisterRequest;
 use App\Http\Requests\ResetPasswordRequest;
@@ -68,6 +69,16 @@ class AuthController extends Controller
     {
         Auth::guard('user')->attempt($request->only('email', 'password'), $request->input('remember', false));
         $user = Auth::user();
+        if ($user) {
+            return $user->getResource();
+        }
+        return $this->unauthorized();
+    }
+
+    public function loginAdminPost(AdminLoginRequest $request): JsonResponse|UserResource
+    {
+        Auth::guard('admin')->attempt($request->only(['email', 'password']), $request->input('remember', false));
+        $user = Auth::guard('admin')->user();
         if ($user) {
             return $user->getResource();
         }
