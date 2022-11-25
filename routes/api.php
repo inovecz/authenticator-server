@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\SettingController;
 use App\Http\Controllers\API\BlacklistController;
 
 /*
@@ -31,13 +32,16 @@ Route::middleware(['guard:user', 'auth:sanctum', 'verified'])->group(function ()
     Route::post('/profile/change-password', [ProfileController::class, 'changePasswordPost']);
 });
 
-Route::middleware(['guard:admin', 'auth:sanctum'])->group(function () {
-    Route::prefix('blacklists')->group(function () {
-        Route::get('/', [BlacklistController::class, 'getByType']);
-        Route::post('/', [BlacklistController::class, 'updateOrCreate']);
-        Route::delete('/', [BlacklistController::class, 'destroy']);
-        Route::get('/count', [BlacklistController::class, 'getCount']);
-        Route::post('/datatable', [BlacklistController::class, 'getDatatable']);
-        Route::get('/{blacklist}/toggle-active', [BlacklistController::class, 'toggleActive'])->where('blacklist', '[0-9]+');
-    });
+/** TODO: Only for admins */
+Route::prefix('blacklists')->group(function () {
+    Route::get('/', [BlacklistController::class, 'getByType']);
+    Route::post('/', [BlacklistController::class, 'updateOrCreate']);
+    Route::delete('/', [BlacklistController::class, 'destroy']);
+    Route::post('/paginate', [BlacklistController::class, 'getPaginated']);
+    Route::post('/toggle-active', [BlacklistController::class, 'toggleActive']);
 });
+
+Route::prefix('settings')->group(function () {
+    Route::post('/', [SettingController::class, 'update']);
+});
+

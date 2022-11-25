@@ -10,7 +10,6 @@
   "require": {
     "php": "^8.0.2|8.1",
     "adrianorosa/laravel-geolocation": "^1.1",
-    "darkaonline/l5-swagger": "^8.4",
     "doctrine/dbal": "^3.5",
     "elegantweb/sanitizer": "^2.0",
     "guzzlehttp/guzzle": "^7.5",
@@ -20,7 +19,8 @@
     "laravel/telescope": "^4.9",
     "laravel/tinker": "^2.7",
     "livewire/livewire": "^2.5",
-    "wire-elements/modal": "^1.0"
+    "wire-elements/modal": "^1.0",
+    "zircote/swagger-php": "^4.5"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",

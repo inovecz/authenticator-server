@@ -19,11 +19,11 @@ class BlacklistDatatableRequest extends FormRequest
     {
         return [
             'type' => ['required', new Enum(BlacklistTypeEnum::class)],
-            'pageLength' => 'required|integer|min:0',
-            'page' => 'required|integer|min:0',
-            'search' => 'nullable|string',
-            'orderBy' => 'nullable|string',
-            'sortAsc' => 'nullable|bool',
+            'page_length' => 'sometimes|nullable|integer|min:0',
+            'page' => 'sometimes|nullable|integer|min:0',
+            'search' => 'sometimes|nullable|string',
+            'order_by' => 'sometimes|nullable|string',
+            'sort_asc' => 'sometimes|nullable|in:1,0,true,false',
         ];
     }
 
@@ -31,11 +31,11 @@ class BlacklistDatatableRequest extends FormRequest
     {
         return [
             'type' => 'trim|escape',
-            'pageLength' => 'digit',
+            'page_length' => 'digit',
             'page' => 'digit',
             'search' => 'trim|escape',
-            'orderBy' => 'trim|escape',
-            'sortAsc' => 'trim|escape|cast:boolean',
+            'order_by' => 'trim|escape',
+            'sort_asc' => 'trim|escape|cast:boolean',
         ];
     }
 }

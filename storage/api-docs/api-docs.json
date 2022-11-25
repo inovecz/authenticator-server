@@ -173,7 +173,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "User has been succesfully created"
+                                            "example": "User has been successfuly created"
                                         }
                                     },
                                     "type": "object"
@@ -206,6 +206,109 @@
                                     "string5": {
                                         "summary": "Password length",
                                         "value": "The password must be at least 8 characters."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/blacklists/paginate": {
+            "post": {
+                "tags": [
+                    "blacklist"
+                ],
+                "summary": "Get paginated list of blacklisted records",
+                "description": "Allow to return n records using filters, search, order",
+                "operationId": "blacklistsPaginate",
+                "requestBody": {
+                    "description": "Pass pagination data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "type"
+                                ],
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "IP",
+                                            "DOMAIN",
+                                            "EMAIL"
+                                        ],
+                                        "example": "DOMAIN"
+                                    },
+                                    "pageLength": {
+                                        "type": "integer",
+                                        "example": "10"
+                                    },
+                                    "page": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "filter": {
+                                        "type": "string",
+                                        "default": "all",
+                                        "example": "all"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "UserResource": {
+                                            "$ref": "#/components/schemas/UserResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user is not authenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Sorry, wrong email address or password. Please try again"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "examples": {
+                                    "string1": {
+                                        "summary": "The email field is required.",
+                                        "value": "The email field is required."
+                                    },
+                                    "string2": {
+                                        "summary": "The selected email is invalid.",
+                                        "value": "The selected email is invalid."
+                                    },
+                                    "string3": {
+                                        "summary": "The password field is required.",
+                                        "value": "The password field is required."
                                     }
                                 }
                             }

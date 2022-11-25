@@ -1,26 +1,25 @@
 <?php
+
 declare(strict_types=1);
+
 namespace App\Models\Traits;
 
 use Carbon\Carbon;
 use OpenApi\Annotations as OA;
 
 /**
- * @property int $id
- * @property Carbon $created_at
- * @property Carbon $updated_at
- */
-
-/**
  * @OA\Schema(
- * @OA\Property(property="created_at", type="string", format="date-time", description="Initial creation timestamp", readOnly="true"),
- * @OA\Property(property="updated_at", type="string", format="date-time", description="Last update timestamp", readOnly="true"),
+ *      @OA\Xml(name="ModelTrait"),
+ *      @OA\Property(property="id", type="integer", example=1, description="Identificator of the current object", readOnly="true"),
+ *      @OA\Property(property="created_at", type="string", format="date-time", example="2022-10-10T00:00:00", description="Initial creation timestamp", readOnly="true"),
+ *      @OA\Property(property="updated_at", type="string", format="date-time", example="2022-10-10T00:00:00", description="Last update timestamp", readOnly="true"),
  * )
+ *
  * Class ModelTrait
  *
- * @package App\Models\Traits
  */
-trait ModelTrait {
+trait ModelTrait
+{
     public function getId(): int
     {
         return $this->id;
