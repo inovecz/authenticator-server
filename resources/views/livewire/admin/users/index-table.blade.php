@@ -86,9 +86,10 @@
                                 <td class="px-5 py-3 border-b border-gray-200 text-sm">
                                     <p class="text-gray-900 whitespace-no-wrap">{{ round($user->getAverageScore(), 1) }}</p>
                                 </td>
-                                <td class="px-5 py-3 border-b border-gray-200 text-sm text-right">
+                                <td class="px-5 py-3 border-b border-gray-200 text-sm text-right text-xl">
                                     <div class="flex space-x-4 justify-end">
-                                        <a class="btn btn-link p-0 cursor-pointer" title="Odstranit uživatele">
+                                        <a wire:click.prevent="$emit('openModal', 'modals.confirmation', {{ json_encode(['type' => 'danger', 'title' => 'Odebrání uživatele', 'text' => 'Opravdu si přejete smazat uživatele ' . $user['surname'] . ' ' . $user['name'] . '?', 'event'=> 'deleteConfirmed', 'passThrough' => ['userId' => $user['id']]]) }})"
+                                           class="btn btn-link p-0 cursor-pointer" title="Odstranit uživatele">
                                             <i class="fa-solid fa-trash-alt text-red-500 hover:text-red-700"></i>
                                         </a>
                                     </div>
@@ -112,7 +113,7 @@
                 <option value="50">50</option>
                 <option value="100">100</option>
             </select>
-            <div class="">{{ $users->onEachSide(2)->links() }}</div>
+            <div class="">{{ $users->links() }}</div>
         </div>
     </div>
 </div>

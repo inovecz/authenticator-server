@@ -23,27 +23,28 @@ class IndexTable extends Component
     protected $queryString = ['filter', 'search', 'orderBy', 'sortAsc'];
 
     protected $listeners = [
-        'refreshList' => '$refresh'
+        'refreshList' => '$refresh',
+        'deleteConfirmed' => 'deleteUser',
     ];
 
     public function render()
     {
         $users = User::select('users.*',)
             ->when($this->search !== '', function (Builder $query) {
-                $query->when($this->filter === 'all', function(Builder $searchQuery) {
-                    $searchQuery->where('users.name', 'LIKE', '%' . $this->search . '%')
-                        ->orWhere('surname', 'LIKE', '%' . $this->search . '%')
-                        ->orWhere('email', 'LIKE', '%' . $this->search . '%')
-                        ->orWhere('hash', 'LIKE', '%' . $this->search . '%');
+                $query->when($this->filter === 'all', function (Builder $searchQuery) {
+                    $searchQuery->where('users.name', 'LIKE', '%'.$this->search.'%')
+                        ->orWhere('surname', 'LIKE', '%'.$this->search.'%')
+                        ->orWhere('email', 'LIKE', '%'.$this->search.'%')
+                        ->orWhere('hash', 'LIKE', '%'.$this->search.'%');
                 });
-                $query->when($this->filter === 'name', function(Builder $searchQuery) {
-                    $searchQuery->where('users.name', 'LIKE', '%' . $this->search . '%');
-                })->when($this->filter === 'surname', function(Builder $searchQuery) {
-                    $searchQuery->where('surname', 'LIKE', '%' . $this->search . '%');
-                })->when($this->filter === 'email', function(Builder $searchQuery) {
-                    $searchQuery->where('email', 'LIKE', '%' . $this->search . '%');
-                })->when($this->filter === 'hash', function(Builder $searchQuery) {
-                    $searchQuery->where('hash', 'LIKE', '%' . $this->search . '%');
+                $query->when($this->filter === 'name', function (Builder $searchQuery) {
+                    $searchQuery->where('users.name', 'LIKE', '%'.$this->search.'%');
+                })->when($this->filter === 'surname', function (Builder $searchQuery) {
+                    $searchQuery->where('surname', 'LIKE', '%'.$this->search.'%');
+                })->when($this->filter === 'email', function (Builder $searchQuery) {
+                    $searchQuery->where('email', 'LIKE', '%'.$this->search.'%');
+                })->when($this->filter === 'hash', function (Builder $searchQuery) {
+                    $searchQuery->where('hash', 'LIKE', '%'.$this->search.'%');
                 });
             })->when($this->orderBy !== '', function (Builder $orderQuery) {
                 if ($this->orderBy === 'fullname') {
@@ -74,5 +75,20 @@ class IndexTable extends Component
             $this->sortAsc = true;
         }
         $this->orderBy = $field;
+    }
+
+    public function deleteUser(array $passThrough): void
+    {
+        $userId = $passThrough['userId'] ?? null;
+        if (!$userId) {
+            return;
+        }
+        $deleted = User::where('id', $userId)->delete();
+        if ($deleted) {
+            $this->render();
+            $this->dispatchBrowserEvent('alert', ['type' => 'success', 'message' => 'Uživatel byl úspěšně smazán', 'options' => ['timeOut' => 1000]]);
+        } else {
+            $this->dispatchBrowserEvent('alert', ['type' => 'danger', 'message' => 'Uživatele nebylo možné smazat', 'options' => ['timeOut' => 5000]]);
+        }
     }
 }

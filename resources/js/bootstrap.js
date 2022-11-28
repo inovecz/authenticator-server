@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import axios from 'axios';
 import toastr from 'toastr';
+import * as Popper from '@popperjs/core'
 
 window._ = _;
 
@@ -17,6 +18,10 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /** Toastr */
 
 window.toastr = toastr;
+
+/** Popper */
+
+window.Popper = Popper;
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

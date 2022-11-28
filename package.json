@@ -20,6 +20,8 @@
         "vite": "^3.0.0"
     },
     "dependencies": {
-        "@alpinejs/persist": "^3.10.5"
+        "@alpinejs/persist": "^3.10.5",
+        "@popperjs/core": "^2.11.6",
+        "popper": "^1.0.1"
     }
 }
