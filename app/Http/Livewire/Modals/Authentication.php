@@ -3,8 +3,6 @@
 namespace App\Http\Livewire\Modals;
 
 use App\Models\User;
-use App\Models\LoginAttemp;
-use App\Services\LoginService;
 use App\Events\Enforce2FAEvent;
 use Elegant\Sanitizer\Sanitizer;
 use LivewireUI\Modal\ModalComponent;
@@ -24,6 +22,8 @@ class Authentication extends ModalComponent
     public ?array $loginScoreResponse = null;
     public bool $twoFactorRequired = false;
 
+    public ?int $loginAttemptId = null;
+
     public function updated($propertyName): void
     {
         if ($this->action === 'register') {
@@ -34,17 +34,15 @@ class Authentication extends ModalComponent
                 'password' => ['required', Password::min(8)->letters()->mixedCase()->numbers()->uncompromised()],
                 'password_confirmation' => 'required|same:password',
             ]);
+        } elseif ($this->action === 'forgottenPassword') {
+            $this->validateOnly($propertyName, [
+                'email' => 'required|email',
+            ]);
         } else {
-            if ($this->action === 'forgottenPassword') {
-                $this->validateOnly($propertyName, [
-                    'email' => 'required|email',
-                ]);
-            } else {
-                $this->validateOnly($propertyName, [
-                    'email' => 'required|email',
-                    'password' => 'required|string',
-                ]);
-            }
+            $this->validateOnly($propertyName, [
+                'email' => 'required|email',
+                'password' => 'required|string',
+            ]);
         }
     }
 
@@ -96,6 +94,7 @@ class Authentication extends ModalComponent
                 if ($verified) {
                     $this->dispatchBrowserEvent('alert', ['type' => 'success', 'message' => 'Ověření bylo úspěšné', 'options' => ['timeOut' => 1000]]);
                     $this->dispatchBrowserEvent('alert', ['type' => 'info', 'message' => 'Přihlášení může pokračovat...', 'options' => ['timeOut' => 5000]]);
+                    $this->confirmLoginAttempt($this->loginAttemptId);
                 } else {
                     $this->dispatchBrowserEvent('alert', ['type' => 'error', 'message' => 'Zadaný kód neodpovídá nebo jeho platnost již vypršela', 'options' => ['timeOut' => 5000]]);
                     return;
@@ -103,6 +102,9 @@ class Authentication extends ModalComponent
             }
             $scoreEngineService = new ScoreEngineService();
             $this->loginScoreResponse = $scoreEngineService->score(request(), $validated);
+            if (isset($this->loginScoreResponse['login_attempt_id'])) {
+                $this->loginAttemptId = $this->loginScoreResponse['login_attempt_id'];
+            }
             if (isset($this->loginScoreResponse['error']) && $this->loginScoreResponse['error'] === 'Entity is blacklisted') {
                 $reason = match ($this->loginScoreResponse['blacklist_type']) {
                     'IP' => 'zakázané IP adresy',
@@ -122,12 +124,19 @@ class Authentication extends ModalComponent
                 $this->addError('verification_code', 'Pro ověření zadejte kód, který byl odeslán na Váš e-mail.');
             } else {
                 $this->dispatchBrowserEvent('alert', ['type' => 'info', 'message' => 'Přihlášení může pokračovat...', 'options' => ['timeOut' => 5000]]);
+                $this->confirmLoginAttempt($this->loginAttemptId);
             }
 
             if (isset($this->loginScoreResponse['score']) && $this->loginScoreResponse['score'] >= $disallowTresshold) {
                 $this->dispatchBrowserEvent('alert', ['type' => 'error', 'message' => 'Skóre větší než '.$disallowTresshold.', přihlášení je blokováno', 'options' => ['timeOut' => 5000]]);
             }
         }
+    }
+
+    private function confirmLoginAttempt(int $loginAttemptId): void
+    {
+        $scoringEngineService = new ScoreEngineService();
+        $scoringEngineService->confirmLoginAttempt($loginAttemptId);
     }
 }
 

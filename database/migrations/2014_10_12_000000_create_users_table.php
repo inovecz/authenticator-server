@@ -1,12 +1,11 @@
 <?php
 
 use App\Enums\GenderEnum;
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -23,7 +22,7 @@ return new class extends Migration
             $table->string('email', 64)->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password', 60);
-            $table->timestamp('last_attemp_at')->nullable();
+            $table->timestamp('last_attempt_at')->nullable();
             $table->unsignedInteger('login_count')->default(0);
             $table->unsignedDouble('average_score')->default(0.0);
             $table->rememberToken();

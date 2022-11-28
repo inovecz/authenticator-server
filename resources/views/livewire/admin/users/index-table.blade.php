@@ -34,9 +34,9 @@
                                 </a>
                             </th>
                             <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                <a class="cursor-pointer whitespace-nowrap" wire:click="orderBy('last_attemp_at')">
+                                <a class="cursor-pointer whitespace-nowrap" wire:click="orderBy('last_attempt_at')">
                                     Poslední přihlášení
-                                    <x-sort-icon field="last_attemp_at" :orderBy="$orderBy" :sortAsc="$sortAsc"/>
+                                    <x-sort-icon field="last_attempt_at" :orderBy="$orderBy" :sortAsc="$sortAsc"/>
                                 </a>
                             </th>
                             <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
@@ -72,11 +72,11 @@
                                     <p class="text-gray-900 whitespace-no-wrap">{{ $user->getEmail() }}</p>
                                 </td>
                                 <td class="px-5 py-3 border-b border-gray-200 text-sm">
-                                    @if($user->getLastAttempAt())
+                                    @if($user->getLastAttemptAt())
                                         <p class="text-gray-900 whitespace-no-wrap">
-                                            {{ $user->getLastAttempAt()->format('d.m.Y') }}
+                                            {{ $user->getLastAttemptAt()->format('d.m.Y') }}
                                             <br>
-                                            <span class="text-gray-500 text-xs">{{ $user->getLastAttempAt()->format('H:i:s') }}</span>
+                                            <span class="text-gray-500 text-xs">{{ $user->getLastAttemptAt()->format('H:i:s') }}</span>
                                         </p>
                                     @endif
                                 </td>

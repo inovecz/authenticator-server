@@ -26,7 +26,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $hidden = ['password', 'remember_token', 'two_factor_recovery_codes', 'two_factor_secret',];
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'last_attemp_at' => 'datetime',
+        'last_attempt_at' => 'datetime',
         'gender' => GenderEnum::class,
     ];
     // </editor-fold desc="Region: STATE DEFINITION">
@@ -59,9 +59,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->email;
     }
 
-    public function getLastAttempAt(): ?Carbon
+    public function getLastAttemptAt(): ?Carbon
     {
-        return $this->last_attemp_at;
+        return $this->last_attempt_at;
     }
 
     public function getLoginCount(): int

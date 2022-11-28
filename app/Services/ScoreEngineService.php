@@ -29,7 +29,7 @@ class ScoreEngineService
 
         if ($response->successful()) {
             $user->update([
-                'last_attemp_at' => now(),
+                'last_attempt_at' => now(),
                 'average_score' => ($user->getAverageScore() * $user->getLoginCount() + $resultArray['score']) / ($user->getLoginCount() + 1),
                 'login_count' => $user->getLoginCount() + 1,
             ]);
@@ -108,5 +108,11 @@ class ScoreEngineService
     {
         $response = Http::post(config('app.scoring_engine_api').'/settings', compact('key', 'value'));
         return $this->isApiCall ? Response::toJsonResponse($response) : $response->successful();
+    }
+
+    public function confirmLoginAttempt(int $loginAttempId): bool
+    {
+        $response = Http::post(config('app.scoring_engine_api').'/confirm-login-attempt', ['id' => $loginAttempId]);
+        return $response->successful();
     }
 }
