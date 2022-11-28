@@ -29,18 +29,18 @@ class SettingController extends Controller
      *         description="Pass setting key-value pair",
      *         @OA\JsonContent(
      *              required={"key", "value"},
-     *              @OA\Property(property="key", type="string", example="scoring.password.leaks", description="Setting's key name (in dotted notation)"),
-     *              @OA\Property(property="value", type="string", description="The value of the setting (int|string|bool)"),
+     *              @OA\Property(property="key", example="scoring.password.leaks", type="string", enum={"scoring.password.length","scoring.password.complexity.symbols","scoring.password.complexity.mixed_case","scoring.password.leaks","scoring.password.complexity.letters","scoring.password.complexity.numbers","scoring.entity.device","scoring.entity.geodata","scoring.entity.disposable_email","scoring.entity.leaks.phone","scoring.entity.leaks.email","scoring.entity.blacklist","scoring.twofactor_when_score_gte","scoring.disallow_when_score_gte","deny_login.blacklist.email","deny_login.blacklist.domain","deny_login.blacklist.ip"}),
+     *              @OA\Property(property="value", example=true, type="object", description="The value of the setting (int|string|bool)"),
      *         ),
      *      ),
-     *      @OA\Response(
+     * @OA\Response(
      *          response=200,
      *          description="Success",
      *          @OA\JsonContent(
-     *              @OA\Property(property="setting.dotted.path", type="string", example=true)
+     *              @OA\Property(property="setting.dotted.name", type="string", example=true)
      *          )
      *      ),
-     *     @OA\Response(
+     * @OA\Response(
      *         response=404,
      *         description="Not found",
      *         @OA\JsonContent(

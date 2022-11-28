@@ -542,13 +542,32 @@
                                 ],
                                 "properties": {
                                     "key": {
-                                        "description": "Setting's key name (in dotted notation)",
                                         "type": "string",
+                                        "enum": [
+                                            "scoring.password.length",
+                                            "scoring.password.complexity.symbols",
+                                            "scoring.password.complexity.mixed_case",
+                                            "scoring.password.leaks",
+                                            "scoring.password.complexity.letters",
+                                            "scoring.password.complexity.numbers",
+                                            "scoring.entity.device",
+                                            "scoring.entity.geodata",
+                                            "scoring.entity.disposable_email",
+                                            "scoring.entity.leaks.phone",
+                                            "scoring.entity.leaks.email",
+                                            "scoring.entity.blacklist",
+                                            "scoring.twofactor_when_score_gte",
+                                            "scoring.disallow_when_score_gte",
+                                            "deny_login.blacklist.email",
+                                            "deny_login.blacklist.domain",
+                                            "deny_login.blacklist.ip"
+                                        ],
                                         "example": "scoring.password.leaks"
                                     },
                                     "value": {
                                         "description": "The value of the setting (int|string|bool)",
-                                        "type": "string"
+                                        "type": "object",
+                                        "example": true
                                     }
                                 },
                                 "type": "object"
@@ -563,7 +582,7 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "setting.dotted.path": {
+                                        "setting.dotted.name": {
                                             "type": "string",
                                             "example": true
                                         }
