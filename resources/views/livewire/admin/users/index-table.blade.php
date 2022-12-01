@@ -9,9 +9,11 @@
                     <option value="{{ $filterKey }}">{{ $filterLabel }}</option>
                 @endforeach
             </select>
-            <div class="flex-1">
+            <div class="flex-1 relative">
                 <input wire:model.debounce.500ms="search" type="text" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Vyhledat...">
+                <span class="{{ $search === '' ? 'hidden' : '' }} absolute top-1/2 -translate-y-1/2 right-3 text-gray-600 hover:text-gray-700 cursor-pointer" wire:click="$set('search', '')"><i class="fa-solid fa-xmark"></i></span>
             </div>
+            <x-button :click="'Livewire.emit(\'openModal\', \'modals.user-save\')'" button="primary" class="ml-4" awesome-icon="fa-solid fa-plus">Přidat</x-button>
         </div>
 
         <!--</editor-fold desc="SEARCH">-->
@@ -29,7 +31,7 @@
                             </th>
                             <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                 <a class="cursor-pointer whitespace-nowrap" wire:click="orderBy('email')">
-                                    E-mail
+                                    Kontakt
                                     <x-sort-icon field="email" :orderBy="$orderBy" :sortAsc="$sortAsc"/>
                                 </a>
                             </th>
@@ -69,7 +71,11 @@
                                     </div>
                                 </td>
                                 <td class="px-5 py-3 border-b border-gray-200 text-sm">
-                                    <p class="text-gray-900 whitespace-no-wrap">{{ $user->getEmail() }}</p>
+                                    <p class="text-gray-900 whitespace-no-wrap">
+                                        {{ $user->getEmail() }}
+                                        <br>
+                                        <span class="text-gray-500 text-xs">{{ $user->getPhone() }}</span>
+                                    </p>
                                 </td>
                                 <td class="px-5 py-3 border-b border-gray-200 text-sm">
                                     @if($user->getLastAttemptAt())
@@ -88,7 +94,10 @@
                                 </td>
                                 <td class="px-5 py-3 border-b border-gray-200 text-sm text-right text-xl">
                                     <div class="flex space-x-4 justify-end">
-                                        <a wire:click.prevent="$emit('openModal', 'modals.confirmation', {{ json_encode(['type' => 'danger', 'title' => 'Odebrání uživatele', 'text' => 'Opravdu si přejete smazat uživatele ' . $user['surname'] . ' ' . $user['name'] . '?', 'event'=> 'deleteConfirmed', 'passThrough' => ['userId' => $user['id']]]) }})"
+                                        <a wire:click.prevent="$emit('openModal', 'modals.user-save', {{ json_encode(['user' => $user]) }})" href="#" class="btn btn-link p-0 cursor-pointer" title="Upravit uživatele">
+                                            <i class="fa-solid fa-pen-to-square text-blue-500 hover:text-blue-400"></i>
+                                        </a>
+                                        <a wire:click.prevent="$emit('openModal', 'modals.confirmation', {{ json_encode(['type' => 'danger', 'title' => 'Odebrání uživatele', 'text' => 'Opravdu si přejete smazat uživatele ' . $user['surname'] . ' ' . $user['name'] . '?', 'event'=> 'deleteConfirmed', 'passThrough' => ['hash' => $user['hash']]]) }})"
                                            class="btn btn-link p-0 cursor-pointer" title="Odstranit uživatele">
                                             <i class="fa-solid fa-trash-alt text-red-500 hover:text-red-700"></i>
                                         </a>

@@ -14,11 +14,10 @@ class LoginController extends Controller
     {
         $remember = $request->input('remember', false);
         Auth::guard('admin')->attempt($request->all(['email', 'password']), $remember);
-        if ($admin = Auth::guard('admin')->user()) {
-            Auth::login($admin, $remember);
+        if (Auth::guard('admin')->user()) {
             return redirect(route('dashboard'));
         }
-        return redirect()->back();
+        return redirect(route('admin.loginPage'));
     }
 
     public function logoutPost(Request $request)

@@ -17,7 +17,7 @@ class IndexTable extends Component
     public bool $sortAsc = false;
     public bool $hideNoSalary = false;
 
-    public array $filters = ['all' => 'Vše', 'name' => 'Jméno', 'surname' => 'Příjmení', 'email' => 'E-mail', 'hash' => 'Hash'];
+    public array $filters = ['all' => 'Vše', 'name' => 'Jméno', 'surname' => 'Příjmení', 'email' => 'E-mail', 'phone' => 'Telefon', 'hash' => 'Hash'];
     public string $filter = 'all';
 
     protected $queryString = ['filter', 'search', 'orderBy', 'sortAsc'];
@@ -25,6 +25,7 @@ class IndexTable extends Component
     protected $listeners = [
         'refreshList' => '$refresh',
         'deleteConfirmed' => 'deleteUser',
+        'userSaved' => 'userSaved',
     ];
 
     public function render()
@@ -35,6 +36,7 @@ class IndexTable extends Component
                     $searchQuery->where('users.name', 'LIKE', '%'.$this->search.'%')
                         ->orWhere('surname', 'LIKE', '%'.$this->search.'%')
                         ->orWhere('email', 'LIKE', '%'.$this->search.'%')
+                        ->orWhere('phone', 'LIKE', '%'.$this->search.'%')
                         ->orWhere('hash', 'LIKE', '%'.$this->search.'%');
                 });
                 $query->when($this->filter === 'name', function (Builder $searchQuery) {
@@ -43,6 +45,8 @@ class IndexTable extends Component
                     $searchQuery->where('surname', 'LIKE', '%'.$this->search.'%');
                 })->when($this->filter === 'email', function (Builder $searchQuery) {
                     $searchQuery->where('email', 'LIKE', '%'.$this->search.'%');
+                })->when($this->filter === 'phone', function (Builder $searchQuery) {
+                    $searchQuery->where('phone', 'LIKE', '%'.$this->search.'%');
                 })->when($this->filter === 'hash', function (Builder $searchQuery) {
                     $searchQuery->where('hash', 'LIKE', '%'.$this->search.'%');
                 });
@@ -79,16 +83,26 @@ class IndexTable extends Component
 
     public function deleteUser(array $passThrough): void
     {
-        $userId = $passThrough['userId'] ?? null;
-        if (!$userId) {
+        $hash = $passThrough['hash'] ?? null;
+        if (!$hash) {
             return;
         }
-        $deleted = User::where('id', $userId)->delete();
+        $deleted = User::where('hash', $hash)->delete();
         if ($deleted) {
             $this->render();
             $this->dispatchBrowserEvent('alert', ['type' => 'success', 'message' => 'Uživatel byl úspěšně smazán', 'options' => ['timeOut' => 1000]]);
         } else {
             $this->dispatchBrowserEvent('alert', ['type' => 'danger', 'message' => 'Uživatele nebylo možné smazat', 'options' => ['timeOut' => 5000]]);
+        }
+    }
+
+    public function userSaved(array|false $user): void
+    {
+        if ($user !== false) {
+            $this->render();
+            $this->dispatchBrowserEvent('alert', ['type' => 'success', 'message' => 'Uživatel byl úspěšně uložen', 'options' => ['timeOut' => 1000]]);
+        } else {
+            $this->dispatchBrowserEvent('alert', ['type' => 'danger', 'message' => 'Uživatele nebylo možné uložit', 'options' => ['timeOut' => 5000]]);
         }
     }
 }

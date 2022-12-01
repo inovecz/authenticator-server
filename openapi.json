@@ -27,7 +27,7 @@
                                     "email": {
                                         "type": "string",
                                         "format": "email",
-                                        "example": "user@inove.cz"
+                                        "example": "oto.novak@email.cz"
                                     },
                                     "password": {
                                         "type": "string",
@@ -604,6 +604,213 @@
                                         }
                                     },
                                     "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users": {
+            "post": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Update or create user",
+                "description": "Save user record",
+                "operationId": "usersUpdateOrCreate",
+                "requestBody": {
+                    "description": "Pass user record data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "surname",
+                                    "email"
+                                ],
+                                "properties": {
+                                    "hash": {
+                                        "description": "Identificator of the user record. If provided, update is performed",
+                                        "type": "string",
+                                        "example": "97dfab9823664071a0b767ae3eb5a0ca",
+                                        "nullable": "true"
+                                    },
+                                    "name": {
+                                        "description": "User's name",
+                                        "type": "string",
+                                        "example": "Oto"
+                                    },
+                                    "surname": {
+                                        "description": "User's surname",
+                                        "type": "string",
+                                        "example": "Novák"
+                                    },
+                                    "email": {
+                                        "description": "User's e-mail",
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "oto.novak@email.cz"
+                                    },
+                                    "gender": {
+                                        "description": "User's gender",
+                                        "type": "string",
+                                        "enum": [
+                                            "MALE",
+                                            "FEMALE",
+                                            "OTHER"
+                                        ],
+                                        "example": "OTHER",
+                                        "nullable": "true"
+                                    },
+                                    "password": {
+                                        "description": "User's password",
+                                        "type": "string",
+                                        "example": "Password1234",
+                                        "nullable": "true"
+                                    },
+                                    "password_confirmation": {
+                                        "description": "User's password confirmation",
+                                        "type": "string",
+                                        "example": "Password1234",
+                                        "nullable": "true"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "UserResource": {
+                                            "$ref": "#/components/schemas/UserResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "examples": {
+                                    "string1": {
+                                        "summary": "Email exists",
+                                        "value": "The email has already been taken."
+                                    },
+                                    "string2": {
+                                        "summary": "Invalid e-mail",
+                                        "value": "The email must be a valid email address."
+                                    },
+                                    "string3": {
+                                        "summary": "Invalid phone format",
+                                        "value": "The phone format is invalid."
+                                    },
+                                    "string4": {
+                                        "summary": "Invalid hash",
+                                        "value": "The selected hash is invalid."
+                                    },
+                                    "string5": {
+                                        "summary": "Missing required field",
+                                        "value": "The * field is required."
+                                    },
+                                    "string6": {
+                                        "summary": "Password not matching",
+                                        "value": "The password confirmation does not match."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Delete user record",
+                "description": "Delete user record",
+                "operationId": "userDestroy",
+                "requestBody": {
+                    "description": "Pass blacklist record identificator",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "_method",
+                                    "hash"
+                                ],
+                                "properties": {
+                                    "_method": {
+                                        "description": "Router method specification - always 'delete'",
+                                        "type": "string",
+                                        "example": "delete"
+                                    },
+                                    "hash": {
+                                        "description": "Identificator of the user record",
+                                        "type": "string",
+                                        "example": "97dfab9823664071a0b767ae3eb5a0ca"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "user.deleted"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "user.delete_failed"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "examples": {
+                                    "string1": {
+                                        "summary": "Invalid hash",
+                                        "value": "The selected hash is invalid."
+                                    }
                                 }
                             }
                         }

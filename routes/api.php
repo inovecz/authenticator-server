@@ -27,7 +27,7 @@ Route::middleware('guest')->prefix('auth')->group(function () {
 Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])->middleware(['auth', 'signed'])->name('verification.verify');
 Route::post('/email/verification-notification', [AuthController::class, 'sendVerification'])->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-Route::middleware(['guard:user', 'auth:sanctum', 'verified'])->group(function () {
+Route::middleware(['auth:user', 'verified'])->group(function () {
     Route::post('/profile', [ProfileController::class, 'updateProfilePost']);
     Route::post('/profile/change-password', [ProfileController::class, 'changePasswordPost']);
 });
@@ -43,5 +43,10 @@ Route::prefix('blacklists')->group(function () {
 
 Route::prefix('settings')->group(function () {
     Route::post('/', [SettingController::class, 'update']);
+});
+
+Route::prefix('users')->group(function () {
+    Route::post('/', [\App\Http\Controllers\UserController::class, 'updateOrcreate']);
+    Route::delete('/', [\App\Http\Controllers\UserController::class, 'destroy']);
 });
 

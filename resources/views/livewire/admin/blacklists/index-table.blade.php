@@ -25,10 +25,11 @@
                     <option value="{{ $filterKey }}">{{ $filterLabel }}</option>
                 @endforeach
             </select>
-            <div class="flex-1">
+            <div class="flex-1 relative">
                 <input wire:model.debounce.500ms="search" type="text" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Vyhledat...">
+                <span class="{{ $search === '' ? 'hidden' : '' }} absolute top-1/2 -translate-y-1/2 right-3 text-gray-600 hover:text-gray-700 cursor-pointer" wire:click="$set('search', '')"><i class="fa-solid fa-xmark"></i></span>
             </div>
-            <x-button :click="'Livewire.emit(\'openModal\', \'modals.blacklist-update\', {\'forcedType\': \'' . $blacklistType . '\'})'" button="primary" class="ml-4" awesome-icon="fa-solid fa-plus">Přidat</x-button>
+            <x-button :click="'Livewire.emit(\'openModal\', \'modals.blacklist-save\', {\'forcedType\': \'' . $blacklistType . '\'})'" button="primary" class="ml-4" awesome-icon="fa-solid fa-plus">Přidat</x-button>
         </div>
 
         <!--</editor-fold desc="SEARCH">-->

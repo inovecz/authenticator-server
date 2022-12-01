@@ -16,7 +16,7 @@ Route::prefix('admin')
         Route::get('/', static fn() => view('admin.auth.login'))->name('admin.loginPage');
         Route::post('/login', [LoginController::class, 'loginPost'])->name('admin.login');
         //Route::post('/login', fn() => dd(request()))->name('admin.login');
-        Route::middleware(['guard:admin', 'auth'])->group(function (){
+        Route::middleware(['auth:admin'])->group(function () {
             Route::get('/dashboard', [AdminController::class, 'showDashboard'])->name('dashboard');
             Route::get('/users', static fn() => view('admin.users'))->name('users-list');
             Route::get('/settings', static fn() => view('admin.settings'))->name('settings');

@@ -20,8 +20,9 @@ return new class extends Migration {
             $table->enum('gender', GenderEnum::values())->default(GenderEnum::OTHER->value);
             $table->string('hash', 32)->index();
             $table->string('email', 64)->unique();
+            $table->string('phone', 16)->unique()->nullable()->comment('Phone in e-164 standard');
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password', 60);
+            $table->string('password', 60)->nullable();
             $table->timestamp('last_attempt_at')->nullable();
             $table->unsignedInteger('login_count')->default(0);
             $table->unsignedDouble('average_score')->default(0.0);

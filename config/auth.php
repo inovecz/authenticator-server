@@ -70,13 +70,11 @@ return [
     'providers' => [
         'admins' => [
             'driver' => 'eloquent',
-            'table' => 'admins',
-            'model' => \App\Models\Admin::class
+            'model' => \App\Models\Admin::class,
         ],
         'users' => [
             'driver' => 'eloquent',
-            'table' => 'users',
-            'model' => \App\Models\User::class
+            'model' => \App\Models\User::class,
         ],
     ],
 

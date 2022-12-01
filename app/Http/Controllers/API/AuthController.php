@@ -34,7 +34,7 @@ class AuthController extends Controller
      *    description="Pass user credentials",
      *    @OA\JsonContent(
      *       required={"email","password"},
-     *       @OA\Property(property="email", type="string", format="email", example="user@inove.cz"),
+     *       @OA\Property(property="email", type="string", format="email", example="oto.novak@email.cz"),
      *       @OA\Property(property="password", type="string", format="password", example="PassWord12345"),
      *       @OA\Property(property="remember", type="boolean", example="true"),
      *    ),
@@ -62,7 +62,7 @@ class AuthController extends Controller
      *              @OA\Examples(example="string2", value="The selected email is invalid.", summary="The selected email is invalid."),
      *              @OA\Examples(example="string3", value="The password field is required.", summary="The password field is required."),
      *    )
-     * )
+     * ),
      * )
      */
     public function loginPost(UserLoginRequest $request): JsonResponse|UserResource

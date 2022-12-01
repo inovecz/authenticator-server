@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
-namespace {{ namespace }};
+
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class {{ class }} extends FormRequest
+class UserDeleteRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -14,14 +16,14 @@ class {{ class }} extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'hash' => 'required|exists:users,hash',
         ];
     }
 
     public function filters(): array
     {
         return [
-            //
+            'hash' => 'trim|escape',
         ];
     }
 }

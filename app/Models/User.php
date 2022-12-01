@@ -8,7 +8,6 @@ use Carbon\Carbon;
 use App\Enums\GenderEnum;
 use Illuminate\Support\Str;
 use App\Models\Traits\ModelTrait;
-use Laravel\Sanctum\HasApiTokens;
 use App\Models\Traits\HashableTrait;
 use App\Models\Traits\ResourceTrait;
 use Illuminate\Notifications\Notifiable;
@@ -19,11 +18,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, HashableTrait, ModelTrait, ResourceTrait;
+    use HasFactory, Notifiable, HashableTrait, ModelTrait, ResourceTrait;
 
     // <editor-fold desc="Region: STATE DEFINITION">
     protected $guarded = ['id', 'created_at', 'updated_at'];
-    protected $hidden = ['password', 'remember_token', 'two_factor_recovery_codes', 'two_factor_secret',];
+    protected $hidden = ['password'];
     protected $casts = [
         'email_verified_at' => 'datetime',
         'last_attempt_at' => 'datetime',
@@ -57,6 +56,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getEmail(): string
     {
         return $this->email;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
     }
 
     public function getLastAttemptAt(): ?Carbon

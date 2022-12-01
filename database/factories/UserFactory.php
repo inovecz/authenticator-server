@@ -26,6 +26,7 @@ class UserFactory extends Factory
             'gender' => $gender->value,
             'email' => fake()->unique()->email,
             'email_verified_at' => now(),
+            'phone' => fake()->unique()->e164PhoneNumber,
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
             'last_attempt_at' => fake()->dateTimeBetween(now()->subMonths(12), now()),

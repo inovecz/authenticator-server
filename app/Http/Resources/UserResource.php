@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use OpenApi\Annotations as OA;
@@ -14,6 +16,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @OA\Property(property="surname", type="string", maxLength=64, example="Doe"),
  * @OA\Property(property="gender", ref="#/components/schemas/EnumTrait/properties/gender")),
  * @OA\Property(property="email", type="string", readOnly="true", format="email", description="User unique email address", example="user@gmail.com"),
+ * @OA\Property(property="phone", type="string", readOnly="true", format="phone", description="User unique phone number", example="+123456789"),
  * @OA\Property(property="created_at", ref="#/components/schemas/ModelTrait/properties/created_at"),
  * )
  *
@@ -31,7 +34,8 @@ class UserResource extends JsonResource
             'surname' => $this->getSurname(),
             'gender' => $this->getGender(),
             'email' => $this->getEmail(),
-            'created_at' => $this->getCreatedAt()
+            'phone' => $this->getPhone(),
+            'created_at' => $this->getCreatedAt(),
         ];
     }
 }
