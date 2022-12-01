@@ -32,13 +32,13 @@ class UserController extends Controller
      *         description="Pass user record data",
      *         @OA\JsonContent(
      *              required={"name", "surname", "email"},
-     *              @OA\Property(property="hash", type="string", example="97dfab9823664071a0b767ae3eb5a0ca", nullable="true", description="Identificator of the user record. If provided, update is performed"),
+     *              @OA\Property(property="hash", type="string", example="97dfab9823664071a0b767ae3eb5a0ca", nullable=true, description="Identificator of the user record. If provided, update is performed"),
      *              @OA\Property(property="name", type="string", example="Oto", description="User's name"),
      *              @OA\Property(property="surname", type="string", example="Novák", description="User's surname"),
      *              @OA\Property(property="email", type="string", format="email", example="oto.novak@email.cz", description="User's e-mail"),
-     *              @OA\Property(property="gender", type="string", nullable="true", enum={"MALE","FEMALE","OTHER"}, example="OTHER", description="User's gender"),
-     *              @OA\Property(property="password", type="string", nullable="true", example="Password1234", description="User's password"),
-     *              @OA\Property(property="password_confirmation", type="string", nullable="true", example="Password1234", description="User's password confirmation"),
+     *              @OA\Property(property="gender", type="string", nullable=true, enum={"MALE","FEMALE","OTHER"}, example="OTHER", description="User's gender"),
+     *              @OA\Property(property="password", type="string", nullable=true, example="Password1234", description="User's password"),
+     *              @OA\Property(property="password_confirmation", type="string", nullable=true, example="Password1234", description="User's password confirmation"),
      *         ),
      *      ),
      *      @OA\Response(

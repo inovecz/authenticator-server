@@ -13,7 +13,14 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
  * @OA\Info(
  *    title="Inove Authenticator API",
  *    version="1.0.0",
+ *     @OA\Contact(
+ *          email="support@authenticator.cz"
+ *      ),
  * )
+ * @OA\Server(
+ *     url="https://authenticator.cz",
+ *     description="Really useful description"
+ * ),
  */
 class Controller extends BaseController
 {

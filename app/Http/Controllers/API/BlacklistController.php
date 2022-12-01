@@ -75,7 +75,7 @@ class BlacklistController extends Controller
      *         description="Pass blacklist record data",
      *         @OA\JsonContent(
      *              required={"type", "value"},
-     *              @OA\Property(property="id", type="integer", example="15", nullable="true", description="Identificator of the blacklist record. If provided, update is performed"),
+     *              @OA\Property(property="id", type="integer", example="15", nullable=true, description="Identificator of the blacklist record. If provided, update is performed"),
      *              @OA\Property(property="type", type="string", enum={"IP","DOMAIN","EMAIL"}, example="DOMAIN", description="Blacklist type"),
      *              @OA\Property(property="value", type="string", example="snoopy.", description="The value to be processed against the entity"),
      *              @OA\Property(property="reason", type="string", example="Too many spammers...", description="Note"),

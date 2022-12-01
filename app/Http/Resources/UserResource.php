@@ -15,8 +15,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @OA\Property(property="name", type="string", maxLength=64, example="John"),
  * @OA\Property(property="surname", type="string", maxLength=64, example="Doe"),
  * @OA\Property(property="gender", ref="#/components/schemas/EnumTrait/properties/gender")),
- * @OA\Property(property="email", type="string", readOnly="true", format="email", description="User unique email address", example="user@gmail.com"),
- * @OA\Property(property="phone", type="string", readOnly="true", format="phone", description="User unique phone number", example="+123456789"),
+ * @OA\Property(property="email", type="string", format="email", example="user@gmail.com"),
+ * @OA\Property(property="phone", type="string", format="phone", example="+123456789"),
  * @OA\Property(property="created_at", ref="#/components/schemas/ModelTrait/properties/created_at"),
  * )
  *

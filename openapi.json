@@ -2,8 +2,17 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Inove Authenticator API",
+        "contact": {
+            "email": "support@authenticator.cz"
+        },
         "version": "1.0.0"
     },
+    "servers": [
+        {
+            "url": "https://authenticator.cz",
+            "description": "Really useful description"
+        }
+    ],
     "paths": {
         "/api/auth/login": {
             "post": {
@@ -525,7 +534,7 @@
                                         "description": "Identificator of the blacklist record. If provided, update is performed",
                                         "type": "integer",
                                         "example": "15",
-                                        "nullable": "true"
+                                        "nullable": true
                                     },
                                     "type": {
                                         "description": "Blacklist type",
@@ -826,7 +835,7 @@
                                         "description": "Identificator of the user record. If provided, update is performed",
                                         "type": "string",
                                         "example": "97dfab9823664071a0b767ae3eb5a0ca",
-                                        "nullable": "true"
+                                        "nullable": true
                                     },
                                     "name": {
                                         "description": "User's name",
@@ -853,19 +862,19 @@
                                             "OTHER"
                                         ],
                                         "example": "OTHER",
-                                        "nullable": "true"
+                                        "nullable": true
                                     },
                                     "password": {
                                         "description": "User's password",
                                         "type": "string",
                                         "example": "Password1234",
-                                        "nullable": "true"
+                                        "nullable": true
                                     },
                                     "password_confirmation": {
                                         "description": "User's password confirmation",
                                         "type": "string",
                                         "example": "Password1234",
-                                        "nullable": "true"
+                                        "nullable": true
                                     }
                                 },
                                 "type": "object"
@@ -1028,7 +1037,7 @@
                             "FEMALE",
                             "OTHER"
                         ],
-                        "readOnly": "true"
+                        "readOnly": true
                     }
                 },
                 "type": "object"
@@ -1053,19 +1062,13 @@
                         "$ref": "#/components/schemas/EnumTrait/properties/gender"
                     },
                     "email": {
-                        "schema": "UserResource",
-                        "description": "User unique email address",
                         "type": "string",
                         "format": "email",
-                        "readOnly": "true",
                         "example": "user@gmail.com"
                     },
                     "phone": {
-                        "schema": "UserResource",
-                        "description": "User unique phone number",
                         "type": "string",
                         "format": "phone",
-                        "readOnly": "true",
                         "example": "+123456789"
                     },
                     "created_at": {
@@ -1082,21 +1085,21 @@
                     "id": {
                         "description": "Identificator of the current object",
                         "type": "integer",
-                        "readOnly": "true",
+                        "readOnly": true,
                         "example": 1
                     },
                     "created_at": {
                         "description": "Initial creation timestamp",
                         "type": "string",
                         "format": "date-time",
-                        "readOnly": "true",
+                        "readOnly": true,
                         "example": "2022-10-10T00:00:00"
                     },
                     "updated_at": {
                         "description": "Last update timestamp",
                         "type": "string",
                         "format": "date-time",
-                        "readOnly": "true",
+                        "readOnly": true,
                         "example": "2022-10-10T00:00:00"
                     }
                 },
@@ -1138,7 +1141,7 @@
                         "type": "string",
                         "default": null,
                         "example": "net",
-                        "nullable": "true"
+                        "nullable": true
                     },
                     "orderBy": {
                         "description": "Object's property to order by",
@@ -1195,13 +1198,13 @@
                         "description": "Number of the next page, if exists. If current page is last, value is null",
                         "type": "integer",
                         "example": 2,
-                        "nullable": "true"
+                        "nullable": true
                     },
                     "prev_page": {
                         "description": "Number of the previous page, if exists. If current page is first, value is null",
                         "type": "integer",
                         "example": null,
-                        "nullable": "true"
+                        "nullable": true
                     }
                 },
                 "type": "object",
