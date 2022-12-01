@@ -65,13 +65,13 @@
                                         <img src="https://www.gravatar.com/avatar/{{ md5(strtolower($user->getEmail())) }}?s=32&d=retro" alt="">
 
                                         <div class="ml-3 flex flex-col">
-                                            <div class="text-gray-900 whitespace-no-wrap font-bold">{{ $user->getFullName(reverse: true) }}</div>
+                                            <div class="text-gray-900 whitespace-nowrap font-bold">{{ $user->getFullName(reverse: true) }}</div>
                                             <div class="text-[8px] whitespace-nowrap text-gray-500">{{$user->getHash()}}</div>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="px-5 py-3 border-b border-gray-200 text-sm">
-                                    <p class="text-gray-900 whitespace-no-wrap">
+                                    <p class="text-gray-900 whitespace-nowrap">
                                         {{ $user->getEmail() }}
                                         <br>
                                         <span class="text-gray-500 text-xs">{{ $user->getPhone() }}</span>
@@ -79,7 +79,7 @@
                                 </td>
                                 <td class="px-5 py-3 border-b border-gray-200 text-sm">
                                     @if($user->getLastAttemptAt())
-                                        <p class="text-gray-900 whitespace-no-wrap">
+                                        <p class="text-gray-900 whitespace-nowrap">
                                             {{ $user->getLastAttemptAt()->format('d.m.Y') }}
                                             <br>
                                             <span class="text-gray-500 text-xs">{{ $user->getLastAttemptAt()->format('H:i:s') }}</span>
@@ -87,10 +87,10 @@
                                     @endif
                                 </td>
                                 <td class="px-5 py-3 border-b border-gray-200 text-sm">
-                                    <p class="text-gray-900 whitespace-no-wrap">{{ $user->getLoginCount() }}</p>
+                                    <p class="text-gray-900 whitespace-nowrap">{{ $user->getLoginCount() }}</p>
                                 </td>
                                 <td class="px-5 py-3 border-b border-gray-200 text-sm">
-                                    <p class="text-gray-900 whitespace-no-wrap">{{ round($user->getAverageScore(), 1) }}</p>
+                                    <p class="text-gray-900 whitespace-nowrap">{{ round($user->getAverageScore(), 1) }}</p>
                                 </td>
                                 <td class="px-5 py-3 border-b border-gray-200 text-sm text-right text-xl">
                                     <div class="flex space-x-4 justify-end">

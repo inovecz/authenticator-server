@@ -72,7 +72,7 @@
                         @forelse($data['data'] as $record)
                             <tr class="odd:bg-white even:bg-slate-50 hover:bg-blue-200/50">
                                 <td class="px-5 py-3 border-b border-gray-200 text-sm text-center">
-                                    <p class="text-gray-900 whitespace-no-wrap text-2xl">
+                                    <p class="text-gray-900 whitespace-nowrap text-2xl">
                                         <a wire:click.prevent="toggleBlacklistRecordActive({{ $record['id'] }})" href="#">
                                             @if ($record['active'])
                                                 <i class="fa-solid fa-toggle-on text-green-500 hover:text-green-400"></i>
@@ -83,7 +83,7 @@
                                     </p>
                                 </td>
                                 <td class="px-5 py-3 border-b border-gray-200 text-sm">
-                                    <p class="text-gray-900 whitespace-no-wrap">
+                                    <p class="text-gray-900 whitespace-nowrap">
                                         @if(is_array($record['value']))
                                             {{ implode(' – ', $record['value']) }}
                                         @else
@@ -92,10 +92,10 @@
                                     </p>
                                 </td>
                                 <td class="px-5 py-3 border-b border-gray-200 text-sm">
-                                    <p class="text-gray-900 whitespace-no-wrap">{{ $record['reason'] }}</p>
+                                    <p class="text-gray-900 whitespace-nowrap">{{ $record['reason'] }}</p>
                                 </td>
                                 <td class="px-5 py-3 border-b border-gray-200 text-sm">
-                                    <p class="text-gray-900 whitespace-no-wrap">
+                                    <p class="text-gray-900 whitespace-nowrap">
                                         {{ \Carbon\Carbon::parse($record['created_at'])->format('d.m.Y') }}
                                     </p>
                                 </td>

@@ -713,18 +713,22 @@
                                         "value": "The email must be a valid email address."
                                     },
                                     "string3": {
+                                        "summary": "Phone exists",
+                                        "value": "The phone has already been taken."
+                                    },
+                                    "string4": {
                                         "summary": "Invalid phone format",
                                         "value": "The phone format is invalid."
                                     },
-                                    "string4": {
+                                    "string5": {
                                         "summary": "Invalid hash",
                                         "value": "The selected hash is invalid."
                                     },
-                                    "string5": {
+                                    "string6": {
                                         "summary": "Missing required field",
                                         "value": "The * field is required."
                                     },
-                                    "string6": {
+                                    "string7": {
                                         "summary": "Password not matching",
                                         "value": "The password confirmation does not match."
                                     }
@@ -861,6 +865,14 @@
                         "format": "email",
                         "readOnly": "true",
                         "example": "user@gmail.com"
+                    },
+                    "phone": {
+                        "schema": "UserResource",
+                        "description": "User unique phone number",
+                        "type": "string",
+                        "format": "phone",
+                        "readOnly": "true",
+                        "example": "+123456789"
                     },
                     "created_at": {
                         "$ref": "#/components/schemas/ModelTrait/properties/created_at"
