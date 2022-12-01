@@ -7,7 +7,7 @@ use App\Http\Controllers\Admin\LoginController;
 Route::get('/', static fn() => redirect('/auth'));
 Route::get('/auth', static fn() => view('welcome'))->name('login');
 
-Route::get('/reset-password/{token}', function ($token) {
+Route::get('/reset-password/{token}', static function ($token) {
     return view('auth.reset-password', ['token' => $token]);
 })->middleware('guest')->name('password.reset');
 
@@ -15,7 +15,6 @@ Route::prefix('admin')
     ->group(function () {
         Route::get('/', static fn() => view('admin.auth.login'))->name('admin.loginPage');
         Route::post('/login', [LoginController::class, 'loginPost'])->name('admin.login');
-        //Route::post('/login', fn() => dd(request()))->name('admin.login');
         Route::middleware(['auth:admin'])->group(function () {
             Route::get('/dashboard', [AdminController::class, 'showDashboard'])->name('dashboard');
             Route::get('/users', static fn() => view('admin.users'))->name('users-list');

@@ -19,6 +19,7 @@ use App\Http\Requests\AdminLoginRequest;
 use Illuminate\Auth\Events\PasswordReset;
 use App\Http\Requests\UserRegisterRequest;
 use App\Http\Requests\ResetPasswordRequest;
+use App\Http\Requests\ForgottenPasswordRequest;
 
 class AuthController extends Controller
 {
@@ -102,7 +103,7 @@ class AuthController extends Controller
      *       @OA\Property(property="gender", type="string", enum={"MALE","FEMALE","OTHER"}, example="OTHER", default="OTHER"),
      *       @OA\Property(property="email", type="string", format="email", example="jan.novak@seznam.cz"),
      *       @OA\Property(property="password", type="string", format="password", example="PassWord12345"),
-     *      @OA\Property(property="password_confirmation", type="string", format="password", example="PassWord12345"),
+     *       @OA\Property(property="password_confirmation", type="string", format="password", example="PassWord12345"),
      *    ),
      * ),
      * @OA\Response(
@@ -165,7 +166,46 @@ class AuthController extends Controller
         return $this->success('Verification link sent');
     }
 
-    public function forgotPasswordPost(Request $request): JsonResponse
+    /**
+     * @OA\Post(
+     * path="/api/auth/forgot-password",
+     * summary="Forgotten password",
+     * description="Create a new password reset request",
+     * operationId="authForgotPassword",
+     * tags={"auth"},
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Pass user information",
+     *    @OA\JsonContent(
+     *       required={"email"},
+     *       @OA\Property(property="email", type="string", format="email", example="jan.novak@seznam.cz"),
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Success",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Password reset link was sent")
+     *    )
+     * ),
+     * @OA\Response(
+     *    response=400,
+     *    description="Error",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Unable to send password reset link")
+     *    )
+     * ),
+     * @OA\Response(
+     *    response=422,
+     *    description="Validation errors",
+     *    @OA\JsonContent(
+     *     @OA\Schema(type="string"),
+     *              @OA\Examples(example="string1", value="The selected email is invalid.", summary="Invalid email"),
+     *    )
+     * )
+     * )
+     */
+    public function forgotPasswordPost(ForgottenPasswordRequest $request): JsonResponse
     {
         $status = Password::sendResetLink(
             $request->only('email')
@@ -173,6 +213,51 @@ class AuthController extends Controller
         return $status ? $this->success('Password reset link was sent') : $this->error('Unable to send password reset link');
     }
 
+    /**
+     * @OA\Post(
+     * path="/api/auth/reset-password",
+     * summary="Reset password",
+     * description="Reset password by e-mail and token",
+     * operationId="authResetPassword",
+     * tags={"auth"},
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Pass user information",
+     *    @OA\JsonContent(
+     *       required={"token","email","password", "password_confirmation"},
+     *       @OA\Property(property="token", type="string", format="email", example="$2y$10$4cE1I9WZEFEelCoXaC6rNO/vGfXuUcQL0NKDkaFGoIHbS0mQ4YrWW"),
+     *       @OA\Property(property="email", type="string", format="email", example="jan.novak@seznam.cz"),
+     *       @OA\Property(property="password", type="string", format="password", example="PassWord12345"),
+     *       @OA\Property(property="password_confirmation", type="string", format="password", example="PassWord12345"),
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Success",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Password has been successfuly reseted")
+     *    )
+     * ),
+     * @OA\Response(
+     *    response=400,
+     *    description="Error",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Unable to reset password")
+     *    )
+     * ),
+     * @OA\Response(
+     *    response=422,
+     *    description="Validation errors",
+     *    @OA\JsonContent(
+     *     @OA\Schema(type="string"),
+     *              @OA\Examples(example="string1", value="The email has already been taken.", summary="Email already exists"),
+     *              @OA\Examples(example="string2", value="The * field is required.", summary="Required field"),
+     *              @OA\Examples(example="string3", value="The password confirmation does not match.", summary="Password confirmation"),
+     *              @OA\Examples(example="string4", value="The password must be at least 8 characters.", summary="Password length"),
+     *    )
+     * )
+     * )
+     */
     public function resetPasswordPost(ResetPasswordRequest $request): JsonResponse
     {
         $status = Password::reset(

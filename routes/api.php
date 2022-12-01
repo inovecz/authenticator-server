@@ -36,7 +36,7 @@ Route::middleware(['auth:user', 'verified'])->group(function () {
 Route::prefix('blacklists')->group(function () {
     Route::get('/', [BlacklistController::class, 'getByType']);
     Route::post('/', [BlacklistController::class, 'updateOrCreate']);
-    Route::delete('/', [BlacklistController::class, 'destroy']);
+    Route::delete('/{blacklisId}', [BlacklistController::class, 'destroy'])->where('blacklistId', '\d+');
     Route::post('/paginate', [BlacklistController::class, 'getPaginated']);
     Route::post('/toggle-active', [BlacklistController::class, 'toggleActive']);
 });
@@ -47,6 +47,6 @@ Route::prefix('settings')->group(function () {
 
 Route::prefix('users')->group(function () {
     Route::post('/', [\App\Http\Controllers\UserController::class, 'updateOrcreate']);
-    Route::delete('/', [\App\Http\Controllers\UserController::class, 'destroy']);
+    Route::delete('/{hash}', [\App\Http\Controllers\UserController::class, 'destroy']);
 });
 

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 use App\Services\ScoreEngineService;
 use App\Http\Resources\UserResource;
-use App\Http\Requests\UserDeleteRequest;
 use App\Http\Requests\UpdateOrCreateUserRequest;
 
 class UserController extends Controller
@@ -78,32 +78,31 @@ class UserController extends Controller
 
     /**
      * @OA\Delete(
-     *      path="/api/users",
+     *      path="/api/users/{hash}",
      *      summary="Delete user record",
      *      description="Delete user record",
      *      operationId="userDestroy",
      *      tags={"user"},
-     *      @OA\RequestBody(
-     *         required=true,
-     *         description="Pass blacklist record identificator",
-     *         @OA\JsonContent(
-     *              required={"_method", "hash"},
-     *              @OA\Property(property="_method", type="string", example="delete", description="Router method specification - always 'delete'"),
-     *              @OA\Property(property="hash", type="string", example="97dfab9823664071a0b767ae3eb5a0ca", description="Identificator of the user record"),
-     *         ),
-     *      ),
+     *      @OA\Parameter(name="hash", description="User identification hash", in="path", required=true, example="97dfe966c5a243ff8c7c9d7f0866317e", @OA\Schema(type="string")),
      *      @OA\Response(
      *         response=200,
      *         description="Success",
      *         @OA\JsonContent(
-     *            @OA\Property(property="message",type="string", example="user.deleted")
+     *            @OA\Property(property="message",type="string", example="User has been successfully deleted")
      *         )
      *      ),
      *     @OA\Response(
      *         response=400,
      *         description="Error",
      *         @OA\JsonContent(
-     *            @OA\Property(property="error", type="string", example="user.delete_failed"),
+     *            @OA\Property(property="error", type="string", example="Unable to delete user"),
+     *         )
+     *      ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Error",
+     *         @OA\JsonContent(
+     *            @OA\Property(property="message", type="string", example="User not found"),
      *         )
      *      ),
      *      @OA\Response(
@@ -116,11 +115,14 @@ class UserController extends Controller
      *      ),
      * )
      */
-    public function destroy(UserDeleteRequest $request): JsonResponse
+    public function destroy(Request $request, string $hash): JsonResponse
     {
-        $deleted = User::where($request->only('hash'))->delete();
+        if (!User::where('hash', $hash)->exists()) {
+            return $this->notFound('User not found');
+        }
+        $deleted = User::where('hash', $hash)->delete();
         return $deleted
-            ? $this->success('user.deleted')
-            : $this->error('user.delete_failed');
+            ? $this->success('User has been successfully deleted')
+            : $this->error('Unable to delete use');
     }
 }

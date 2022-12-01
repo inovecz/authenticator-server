@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use OpenApi\Annotations as OA;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 /**
  * @OA\Info(
@@ -44,9 +44,12 @@ class Controller extends BaseController
         return $this->respond(['message' => 'Sorry, you are not allowed to make requested action'], 403);
     }
 
-    public function notFound(): JsonResponse
+    public function notFound(array|string $message = null): JsonResponse
     {
-        return $this->respond(['message' => 'Sorry, the requested resource could not be found'], 404);
+        if (!$message) {
+            return $this->respond(['message' => 'Sorry, the requested resource could not be found'], 404);
+        }
+        return $this->respond(is_array($message) ? $message : ['message' => $message], 404);
     }
 
     public function badRequest(): JsonResponse

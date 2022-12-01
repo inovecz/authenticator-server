@@ -75,7 +75,10 @@ class ScoreEngineService
 
     public function deleteBlacklistRecord(int $blacklistId): bool|JsonResponse
     {
-        $response = Http::post(config('app.scoring_engine_api').'/blacklists', ['_method' => 'delete', 'id' => $blacklistId]);
+        $response = Http::delete(config('app.scoring_engine_api').'/blacklists/'.$blacklistId);
+        if ($this->isApiCall && $response->status() === 404) {
+            return response()->json(['message' => 'Blacklist record was not found'], 404);
+        }
         return $this->isApiCall ? Response::toJsonResponse($response) : $response->successful();
     }
 

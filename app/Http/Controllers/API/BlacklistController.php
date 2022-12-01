@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\API;
 
+use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Services\ScoreEngineService;
 use App\Http\Requests\BlacklistSaveRequest;
-use App\Http\Requests\BlacklistDeleteRequest;
 use App\Http\Requests\BlacklistDatatableRequest;
 use App\Http\Requests\BlacklistToogleActiveRequest;
 
@@ -105,39 +105,38 @@ class BlacklistController extends Controller
 
     /**
      * @OA\Delete(
-     *      path="/api/blacklists",
+     *      path="/api/blacklists/{blacklist_id}",
      *      summary="Delete blacklist record",
      *      description="Delete blacklist record",
      *      operationId="blacklistsDestroy",
      *      tags={"blacklist"},
-     *      @OA\RequestBody(
-     *         required=true,
-     *         description="Pass blacklist record identificator",
-     *         @OA\JsonContent(
-     *              required={"_method", "id"},
-     *              @OA\Property(property="_method", type="string", example="delete", description="Router method specification - always 'delete'"),
-     *              @OA\Property(property="id", type="integer", example="15", description="Identificator of the blacklist record"),
-     *         ),
-     *      ),
+     *      @OA\Parameter(name="blacklist_id", description="ID of the blacklist record", in="path", required=true, example="123", @OA\Schema(type="integer")),
      *      @OA\Response(
      *         response=200,
      *         description="Success",
      *         @OA\JsonContent(
-     *            @OA\Property(property="message",type="string", example="blacklist.deleted")
+     *            @OA\Property(property="message",type="string", example="Blacklist has been successfuly deleted")
      *         )
      *      ),
      *     @OA\Response(
      *         response=400,
      *         description="Error",
      *         @OA\JsonContent(
-     *            @OA\Property(property="error", type="string", example="blacklist.delete_failed"),
+     *            @OA\Property(property="error", type="string", example="Unable to delete blacklist"),
+     *         )
+     *      ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not found",
+     *         @OA\JsonContent(
+     *            @OA\Property(property="message", type="string", example="Blacklist record was not found"),
      *         )
      *      ),
      * )
      */
-    public function destroy(BlacklistDeleteRequest $request): JsonResponse
+    public function destroy(Request $request, int $blacklistId): JsonResponse
     {
-        return $this->scoreEngineService->deleteBlacklistRecord((int) $request->input('id'));
+        return $this->scoreEngineService->deleteBlacklistRecord($blacklistId);
     }
 
     /**
