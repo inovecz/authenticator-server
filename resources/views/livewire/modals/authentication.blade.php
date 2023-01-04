@@ -64,7 +64,7 @@
 
                 @if($loginScoreResponse)
                     <div wire:loading.remove wire:target="submit" class="flex flex-col text-center">
-                        <div class="text-2xl font-bold">{{ round($loginScoreResponse['score'], 2) ?? 'N/A' }}</div>
+                        <div class="text-2xl font-bold">{{ isset($loginScoreResponse['score']) ? round($loginScoreResponse['score'], 2) : 'N/A' }}</div>
                         <div class="text-xs text-gray-500">Login score</div>
                         <div class="text-left">
                             @dump($loginScoreResponse)

@@ -112,23 +112,24 @@ class Authentication extends ModalComponent
                     'EMAIL' => 'zakázaného e-mailu',
                 };
                 $this->addError('scoring_engine', 'Přihlášení z Vašeho účtu je blokováno z důvodu '.$reason.'.');
-            }
-
-            $settings = $scoreEngineService->fetchSettings();
-            $twoFactorTresshold = $settings['scoring']['twofactor_when_score_gte'] ?? config('inove.login.enforce_twofactor_default_tresshold');
-            $disallowTresshold = $settings['scoring']['disallow_when_score_gte'] ?? config('inove.login.disallow_default_tresshold');
-            if (!$this->twoFactorRequired && isset($this->loginScoreResponse['score']) && $this->loginScoreResponse['score'] >= $twoFactorTresshold) {
-                Enforce2FAEvent::dispatch($user);
-                $this->twoFactorRequired = true;
-                $this->dispatchBrowserEvent('alert', ['type' => 'warning', 'message' => 'Pro pokračování je potřeba zadat ověřovací kód', 'options' => ['timeOut' => 5000]]);
-                $this->addError('verification_code', 'Pro ověření zadejte kód, který byl odeslán na Váš e-mail.');
             } else {
-                $this->dispatchBrowserEvent('alert', ['type' => 'info', 'message' => 'Přihlášení může pokračovat...', 'options' => ['timeOut' => 5000]]);
-                $this->confirmLoginAttempt($this->loginAttemptId);
-            }
 
-            if (isset($this->loginScoreResponse['score']) && $this->loginScoreResponse['score'] >= $disallowTresshold) {
-                $this->dispatchBrowserEvent('alert', ['type' => 'error', 'message' => 'Skóre větší než '.$disallowTresshold.', přihlášení je blokováno', 'options' => ['timeOut' => 5000]]);
+                $settings = $scoreEngineService->fetchSettings();
+                $twoFactorTresshold = $settings['scoring']['twofactor_when_score_gte'] ?? config('inove.login.enforce_twofactor_default_tresshold');
+                $disallowTresshold = $settings['scoring']['disallow_when_score_gte'] ?? config('inove.login.disallow_default_tresshold');
+                if (!$this->twoFactorRequired && isset($this->loginScoreResponse['score']) && $this->loginScoreResponse['score'] >= $twoFactorTresshold && $this->loginScoreResponse['score'] < $disallowTresshold) {
+                    Enforce2FAEvent::dispatch($user);
+                    $this->twoFactorRequired = true;
+                    $this->dispatchBrowserEvent('alert', ['type' => 'warning', 'message' => 'Pro pokračování je potřeba zadat ověřovací kód', 'options' => ['timeOut' => 5000]]);
+                    $this->addError('verification_code', 'Pro ověření zadejte kód, který byl odeslán na Váš e-mail.');
+                } else {
+                    $this->dispatchBrowserEvent('alert', ['type' => 'info', 'message' => 'Přihlášení může pokračovat...', 'options' => ['timeOut' => 5000]]);
+                    $this->confirmLoginAttempt($this->loginAttemptId);
+                }
+
+                if (isset($this->loginScoreResponse['score']) && $this->loginScoreResponse['score'] >= $disallowTresshold) {
+                    $this->dispatchBrowserEvent('alert', ['type' => 'error', 'message' => 'Skóre větší než '.$disallowTresshold.', přihlášení je blokováno', 'options' => ['timeOut' => 5000]]);
+                }
             }
         }
     }

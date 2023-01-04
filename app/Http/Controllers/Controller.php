@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 /**
  * @OA\Info(
- *    title="Inove Authenticator API",
+ *    title="Authenticator API",
  *    version="1.0.0",
  *     @OA\Contact(
  *          email="support@authenticator.cz"
