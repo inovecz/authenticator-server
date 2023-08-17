@@ -15,11 +15,11 @@ return new class extends Migration {
     {
         Schema::create('users', static function (Blueprint $table) {
             $table->id();
-            $table->string('name', 64);
-            $table->string('surname', 64);
+            $table->string('name', 64)->nullable();
+            $table->string('surname', 64)->nullable();
             $table->enum('gender', GenderEnum::values())->default(GenderEnum::OTHER->value);
             $table->string('hash', 32)->index();
-            $table->string('email', 64)->unique();
+            $table->string('email', 64)->unique()->nullable();
             $table->string('phone', 16)->unique()->nullable()->comment('Phone in e-164 standard');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password', 60)->nullable();

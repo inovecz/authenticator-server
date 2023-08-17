@@ -12,7 +12,7 @@ class BlacklistSave extends ModalComponent
     public ?array $record = null;
     public ?int $blacklistId = null;
     public ?string $type = null;
-    public ?string $value = null;
+    public string|array|null $value = null;
     public ?string $reason = null;
     public ?bool $active = null;
 

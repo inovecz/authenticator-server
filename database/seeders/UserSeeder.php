@@ -18,12 +18,14 @@ class UserSeeder extends Seeder
             'email' => 'vychozi.uzivatel@email.cz',
             'phone' => '+420123456789',
             'gender' => GenderEnum::MALE,
+            'password' => '123456789',
         ]);
         User::factory()->create([
             'name' => 'Oldřich',
             'surname' => 'Brabec',
             'email' => 'oldrich.brabec@email.cz',
             'gender' => GenderEnum::MALE,
+            'password' => '123456789',
         ]);
         User::factory(1000)->create();
     }

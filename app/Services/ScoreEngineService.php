@@ -82,7 +82,7 @@ class ScoreEngineService
         return $this->isApiCall ? Response::toJsonResponse($response) : $response->successful();
     }
 
-    public function updateBlacklistRecord(?int $id, string $type, string $value, ?string $reason, bool $active = false): array|false|JsonResponse
+    public function updateBlacklistRecord(?int $id, string $type, string|array $value, ?string $reason, bool $active = false): array|false|JsonResponse
     {
         $data = compact('type', 'value', 'reason', 'active');
         if ($id) {

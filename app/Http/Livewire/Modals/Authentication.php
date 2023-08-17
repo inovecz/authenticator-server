@@ -113,7 +113,6 @@ class Authentication extends ModalComponent
                 };
                 $this->addError('scoring_engine', 'Přihlášení z Vašeho účtu je blokováno z důvodu '.$reason.'.');
             } else {
-
                 $settings = $scoreEngineService->fetchSettings();
                 $twoFactorTresshold = $settings['scoring']['twofactor_when_score_gte'] ?? config('inove.login.enforce_twofactor_default_tresshold');
                 $disallowTresshold = $settings['scoring']['disallow_when_score_gte'] ?? config('inove.login.disallow_default_tresshold');
