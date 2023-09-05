@@ -18,7 +18,9 @@ class VerificationCode extends Model
 
     // <editor-fold desc="Region: STATE_DEFINITION">
     protected $guarded = ['id', 'created_at', 'updated_at'];
-    protected $dates = ['valid_until'];
+    protected $casts = [
+        'valid_until' => 'datetime',
+    ];
     // </editor-fold desc="Region: STATE_DEFINITION">
 
     // <editor-fold desc="Region: BOOT">

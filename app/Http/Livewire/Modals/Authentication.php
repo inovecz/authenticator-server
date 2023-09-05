@@ -7,11 +7,22 @@ use App\Events\Enforce2FAEvent;
 use Elegant\Sanitizer\Sanitizer;
 use LivewireUI\Modal\ModalComponent;
 use App\Services\ScoreEngineService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
 use App\Services\VerificationCodeService;
 
 class Authentication extends ModalComponent
 {
+    public float $elapsedTime = 0.0;
+    public float $mouseMaxSpeed = 0.0;
+    public float $mouseAvgSpeed = 0.0;
+    public float $mouseMaxAccel = 0.0;
+    public float $mouseAvgAccel = 0.0;
+    public int $mouseMovement = 0;
+    public int $mouseClicks = 0;
+    public int $mouseSelections = 0;
+    public int $mouseScrolls = 0;
+
     public string $action = 'login';
     public ?string $name = null;
     public ?string $surname = null;
@@ -92,26 +103,49 @@ class Authentication extends ModalComponent
                 $verificationCodeService = new VerificationCodeService();
                 $verified = $verificationCodeService->verifyCode($user, $sanitized['verification_code']);
                 if ($verified) {
-                    $this->dispatchBrowserEvent('alert', ['type' => 'success', 'message' => 'Ověření bylo úspěšné', 'options' => ['timeOut' => 1000]]);
-                    $this->dispatchBrowserEvent('alert', ['type' => 'info', 'message' => 'Přihlášení může pokračovat...', 'options' => ['timeOut' => 5000]]);
-                    $this->confirmLoginAttempt($this->loginAttemptId);
+                    $this->dispatchBrowserEvent('alert', ['type' => 'success', 'message' => __('authentication.verification_succeeded'), 'options' => ['timeOut' => 1000]]);
+                    $this->loginScoreResponse['status'] = 'authentication.verification_succeeded';
+                    $attempt = Auth::guard('api')->attempt(['email' => $validated['email'], 'password' => $validated['password']]);
+                    if ($attempt) {
+                        $this->loginScoreResponse['status'] = 'authentication.verification_succeeded';
+                        $this->loginScoreResponse['bearer'] = $attempt;
+                        $this->dispatchBrowserEvent('alert', ['type' => 'info', 'title' => 'Bearer', 'message' => $attempt, 'options' => ['timeOut' => 5000]]);
+                        $this->confirmLoginAttempt($this->loginAttemptId);
+                    } else {
+                        $this->loginScoreResponse['status'] = 'authentication.wrong_email_password_combination';
+
+                        $this->dispatchBrowserEvent('alert', ['type' => 'error', 'message' => __('authentication.wrong_email_password_combination'), 'options' => ['timeOut' => 5000]]);
+                    }
                 } else {
-                    $this->dispatchBrowserEvent('alert', ['type' => 'error', 'message' => 'Zadaný kód neodpovídá nebo jeho platnost již vypršela', 'options' => ['timeOut' => 5000]]);
+                    $this->loginScoreResponse['status'] = 'authentication.code_not_match_or_expired';
+                    $this->dispatchBrowserEvent('alert', ['type' => 'error', 'message' => __('authentication.code_not_match_or_expired'), 'options' => ['timeOut' => 5000]]);
                     return;
                 }
             }
             $scoreEngineService = new ScoreEngineService();
-            $this->loginScoreResponse = $scoreEngineService->score(request(), $validated);
+            $mouseDynamics = [
+                'timer' => $this->elapsedTime,
+                'mouse_max_speed' => $this->mouseMaxSpeed,
+                'mouse_avg_speed' => $this->mouseAvgSpeed,
+                'mouse_max_accel' => $this->mouseMaxAccel,
+                'mouse_avg_accel' => $this->mouseAvgAccel,
+                'mouse_movement' => $this->mouseMovement,
+                'mouse_clicks' => $this->mouseClicks,
+                'mouse_selections' => $this->mouseSelections,
+                'mouse_scrolls' => $this->mouseScrolls,
+            ];
+            $this->loginScoreResponse = $scoreEngineService->score(request(), array_merge($sanitized, $mouseDynamics));
             if (isset($this->loginScoreResponse['login_attempt_id'])) {
                 $this->loginAttemptId = $this->loginScoreResponse['login_attempt_id'];
             }
             if (isset($this->loginScoreResponse['error']) && $this->loginScoreResponse['error'] === 'Entity is blacklisted') {
                 $reason = match ($this->loginScoreResponse['blacklist_type']) {
-                    'IP' => 'zakázané IP adresy',
-                    'DOMAIN' => 'zakázané domény',
-                    'EMAIL' => 'zakázaného e-mailu',
+                    'IP' => 'ip_address',
+                    'DOMAIN' => 'domain',
+                    'EMAIL' => 'email',
+                    'OS' => 'operating_system',
                 };
-                $this->addError('scoring_engine', 'Přihlášení z Vašeho účtu je blokováno z důvodu '.$reason.'.');
+                $this->addError('scoring_engine', __('authentication.login_blocked_due_to_forbidden_'.$reason));
             } else {
                 $settings = $scoreEngineService->fetchSettings();
                 $twoFactorTresshold = $settings['scoring']['twofactor_when_score_gte'] ?? config('inove.login.enforce_twofactor_default_tresshold');
@@ -119,15 +153,24 @@ class Authentication extends ModalComponent
                 if (!$this->twoFactorRequired && isset($this->loginScoreResponse['score']) && $this->loginScoreResponse['score'] >= $twoFactorTresshold && $this->loginScoreResponse['score'] < $disallowTresshold) {
                     Enforce2FAEvent::dispatch($user);
                     $this->twoFactorRequired = true;
-                    $this->dispatchBrowserEvent('alert', ['type' => 'warning', 'message' => 'Pro pokračování je potřeba zadat ověřovací kód', 'options' => ['timeOut' => 5000]]);
-                    $this->addError('verification_code', 'Pro ověření zadejte kód, který byl odeslán na Váš e-mail.');
+                    $this->dispatchBrowserEvent('alert', ['type' => 'warning', 'message' => __('authentication.verification_code_required'), 'options' => ['timeOut' => 5000]]);
+                    $this->addError('verification_code', __('authentication.insert_code_from_email'));
                 } else {
-                    $this->dispatchBrowserEvent('alert', ['type' => 'info', 'message' => 'Přihlášení může pokračovat...', 'options' => ['timeOut' => 5000]]);
-                    $this->confirmLoginAttempt($this->loginAttemptId);
+                    $attempt = Auth::guard('api')->attempt(['email' => $validated['email'], 'password' => $validated['password']]);
+                    if ($attempt) {
+                        $this->loginScoreResponse['status'] = 'authentication.verification_succeeded';
+                        $this->loginScoreResponse['bearer'] = $attempt;
+                        $this->dispatchBrowserEvent('alert', ['type' => 'info', 'title' => 'Bearer', 'message' => $attempt, 'options' => ['timeOut' => 5000]]);
+                        $this->confirmLoginAttempt($this->loginAttemptId);
+                    } else {
+                        $this->loginScoreResponse['status'] = 'authentication.wrong_email_password_combination';
+                        $this->dispatchBrowserEvent('alert', ['type' => 'error', 'message' => __('authentication.wrong_email_password_combination'), 'options' => ['timeOut' => 5000]]);
+                    }
                 }
 
                 if (isset($this->loginScoreResponse['score']) && $this->loginScoreResponse['score'] >= $disallowTresshold) {
-                    $this->dispatchBrowserEvent('alert', ['type' => 'error', 'message' => 'Skóre větší než '.$disallowTresshold.', přihlášení je blokováno', 'options' => ['timeOut' => 5000]]);
+                    $this->loginScoreResponse['status'] = 'authentication.disallow_score_treshold_reached';
+                    $this->dispatchBrowserEvent('alert', ['type' => 'error', 'message' => __('authentication.disallow_score_treshold_reached'), 'options' => ['timeOut' => 5000]]);
                 }
             }
         }

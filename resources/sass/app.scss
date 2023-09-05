@@ -2,6 +2,27 @@
 
 @tailwind base;
 @tailwind components;
+
+.tippy-box[data-theme~='light'] {
+  @apply p-2 rounded bg-gray-900 dark:bg-gray-200 text-gray-50 dark:text-gray-900 rounded;
+}
+
+.tippy-box[data-theme~='light'][data-placement^='top'] > .tippy-arrow::before {
+  @apply border-t-gray-900 dark:border-t-gray-200;
+}
+
+.tippy-box[data-theme~='light'][data-placement^='left'] > .tippy-arrow::before {
+  @apply border-l-gray-900 dark:border-l-gray-200;
+}
+
+.tippy-box[data-theme~='light'][data-placement^='right'] > .tippy-arrow::before {
+  @apply border-r-gray-900 dark:border-r-gray-200;
+}
+
+.tippy-box[data-theme~='light'][data-placement^='bottom'] > .tippy-arrow::before {
+  @apply border-b-gray-900 dark:border-b-gray-200;
+}
+
 .input {
   @apply relative block w-full appearance-none rounded-md shadow-sm border border-gray-300 border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm;
 }

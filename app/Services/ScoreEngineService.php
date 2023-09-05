@@ -64,6 +64,24 @@ class ScoreEngineService
         return $this->isApiCall ? Response::toJsonResponse($response) : false;
     }
 
+    public function fetchLoginAttemptDatatable(int $pageLength = 10, int $page = 0, ?string $filter = null, ?string $search = null, ?string $orderBy = null, bool $sortAsc = false): array|false|JsonResponse
+    {
+        $data = [
+            'page_length' => $pageLength ?? 10,
+            'page' => $page ?? 0,
+            'filter' => $filter ?? 'all',
+            'search' => $search,
+            'order_by' => $orderBy ?? 'id',
+            'sort_asc' => $sortAsc ?? true,
+        ];
+
+        $response = Http::post(config('app.scoring_engine_api').'/login-attempts/datatable', $data);
+        if ($response->successful()) {
+            return $this->isApiCall ? Response::toJsonResponse($response) : $response->json();
+        }
+        return $this->isApiCall ? Response::toJsonResponse($response) : false;
+    }
+
     public function toggleBlacklistRecordActive(int $blacklistId): array|false|JsonResponse
     {
         $response = Http::get(config('app.scoring_engine_api').'/blacklists/'.$blacklistId.'/toggle-active');

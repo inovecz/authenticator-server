@@ -33,6 +33,12 @@ class IndexTable extends Component
                     'type' => 'bool',
                 ],
                 [
+                    'title' => 'Blokovat přihlášení ze zakázaných operačních systémů (Systémy určené pro provádění penetračních testů, hacking)',
+                    'subtitle' => 'Pokud je v user-agentu klienta detekován některý z následujících operačních systémů: Kali, Parrot, BlackArch, BackBox, Samurai, Pentoo, DEFT, Caine, Network Security Toolkit, BugTraq',
+                    'setting' => 'deny_login.blacklist.os',
+                    'type' => 'bool',
+                ],
+                [
                     'title' => 'Práh vyžádání dvoufaktoru',
                     'subtitle' => 'Pokud hodnota skóre překročí danou mez (včetně), je požadováno ověření pomocí kódu',
                     'setting' => 'scoring.twofactor_when_score_gte',
@@ -112,15 +118,9 @@ class IndexTable extends Component
                     'type' => 'bool',
                 ],
                 [
-                    'title' => 'Geodata',
-                    'subtitle' => 'Kontrolovat přihlášení z obvyklé lokace',
-                    'setting' => 'scoring.entity.geodata',
-                    'type' => 'bool',
-                ],
-                [
-                    'title' => 'Zařízení',
-                    'subtitle' => 'Kontrolovat přihlášení z obvyklého zařízení',
-                    'setting' => 'scoring.entity.device',
+                    'title' => 'Chování uživatele',
+                    'subtitle' => 'Kontrolovat přihlášení na základě strojového učení',
+                    'setting' => 'scoring.entity.behavior',
                     'type' => 'bool',
                 ],
                 [
