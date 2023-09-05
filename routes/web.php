@@ -20,6 +20,7 @@ Route::prefix('admin')
             Route::get('/users', static fn() => view('admin.users'))->name('users-list');
             Route::get('/settings', static fn() => view('admin.settings'))->name('settings');
             Route::get('/blacklists', static fn() => view('admin.blacklists'))->name('blacklists');
+            Route::get('/login-attempts', static fn() => view('admin.login_attempts'))->name('loginAttempts');
             Route::post('logout', [LoginController::class, 'logoutPost'])->name('admin.logout');
         });
     });

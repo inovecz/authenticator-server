@@ -13,10 +13,11 @@ use App\Models\Traits\ResourceTrait;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, JWTSubject
 {
     use HasFactory, Notifiable, HashableTrait, ModelTrait, ResourceTrait;
 
@@ -38,12 +39,12 @@ class User extends Authenticatable implements MustVerifyEmail
     // </editor-fold desc="Region: RELATIONS">
 
     // <editor-fold desc="Region: GETTERS">
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function getSurname(): string
+    public function getSurname(): ?string
     {
         return $this->surname;
     }
@@ -53,7 +54,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->gender;
     }
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -87,7 +88,20 @@ class User extends Authenticatable implements MustVerifyEmail
         if ($ascii) {
             $fullname->each(fn(string $string) => Str::ascii($string));
         }
-        return $reverse ? $fullname->reverse()->implode(' ') : $fullname->implode(' ');
+        $fullnameString = $reverse ? $fullname->reverse()->implode(' ') : $fullname->implode(' ');
+        return (str_replace(' ', '', $fullnameString) === '' || !$fullnameString) ? 'N/A' : $fullnameString;
     }
     // </editor-fold desc="Region: COMPUTED GETTERS">
+
+    // <editor-fold desc="Region: JWT">
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+    // </editor-fold desc="Region: JWT">
 }
