@@ -102,8 +102,8 @@ class Authentication extends ModalComponent
             if ($this->twoFactorRequired) {
                 $verificationCodeService = new VerificationCodeService();
                 $verified = $verificationCodeService->verifyCode($user, $sanitized['verification_code']);
+                $this->loginScoreResponse['status'] = 'authentication.verification_code_required';
                 if ($verified) {
-                    $this->dispatchBrowserEvent('alert', ['type' => 'success', 'message' => __('authentication.verification_succeeded'), 'options' => ['timeOut' => 1000]]);
                     $this->loginScoreResponse['status'] = 'authentication.verification_succeeded';
                     $attempt = Auth::guard('api')->attempt(['email' => $validated['email'], 'password' => $validated['password']]);
                     if ($attempt) {
@@ -113,8 +113,8 @@ class Authentication extends ModalComponent
                         $this->confirmLoginAttempt($this->loginAttemptId);
                     } else {
                         $this->loginScoreResponse['status'] = 'authentication.wrong_email_password_combination';
-
                         $this->dispatchBrowserEvent('alert', ['type' => 'error', 'message' => __('authentication.wrong_email_password_combination'), 'options' => ['timeOut' => 5000]]);
+                        return;
                     }
                 } else {
                     $this->loginScoreResponse['status'] = 'authentication.code_not_match_or_expired';
