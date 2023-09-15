@@ -5,6 +5,8 @@ namespace App\Http\Livewire\Modals;
 use App\Enums\GenderEnum;
 use App\Services\UserService;
 use LivewireUI\Modal\ModalComponent;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\UpdateOrCreateUserRequest;
 
 class UserSave extends ModalComponent
@@ -17,6 +19,8 @@ class UserSave extends ModalComponent
     public string $gender;
     public ?string $email = null;
     public ?string $phone = null;
+    public ?string $password = null;
+    public ?string $passwordConfirmation = null;
 
     public function mount(?array $user = null): void
     {
@@ -29,6 +33,8 @@ class UserSave extends ModalComponent
             $this->gender = $user['gender'];
             $this->email = $user['email'];
             $this->phone = $user['phone'];
+            $this->password = null;
+            $this->passwordConfirmation = null;
         }
     }
 
@@ -50,10 +56,22 @@ class UserSave extends ModalComponent
             'gender' => GenderEnum::from($this->gender),
             'email' => $this->email,
             'phone' => $this->phone,
+            'password' => $this->password,
+            'password_confirmation' => $this->passwordConfirmation,
         ];
 
+        $updatingWithoutPasswordChange = $this->hash && (!$this->password || $this->password === '');
+
+        if ($updatingWithoutPasswordChange) {
+            unset($data['password'], $data['password_confirmation']);
+        }
+
         $validationData = $this->hash ? array_merge($data, ['hash', $this->hash]) : $data;
-        \Validator::make($validationData, (new UpdateOrCreateUserRequest())->prepareRules($this->hash))->validate();
+        Validator::make($validationData, (new UpdateOrCreateUserRequest())->prepareRules($this->hash))->validate();
+        unset($data['password_confirmation']);
+        if (!$updatingWithoutPasswordChange) {
+            $data['password'] = Hash::make($data['password']);
+        }
         $userService = new UserService();
         $user = $userService->updateOrCreate($data, $this->hash);
         $this->emit('userSaved', $user);

@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Enums\GenderEnum;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateOrCreateUserRequest extends FormRequest
@@ -51,7 +52,14 @@ class UpdateOrCreateUserRequest extends FormRequest
             'gender' => ['sometimes', 'nullable', new Enum(GenderEnum::class)],
             'email' => $emailRule,
             'phone' => $phoneRule,
-            'password' => 'sometimes|required|min:8|confirmed',
+            'password' => ['sometimes', 'required_without:hash', Password::min(8)->letters()->mixedCase()->numbers(), 'confirmed'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'password.required_without' => 'Při vytváření uživatele je heslo povinné',
         ];
     }
 }
