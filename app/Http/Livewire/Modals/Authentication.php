@@ -8,6 +8,7 @@ use Elegant\Sanitizer\Sanitizer;
 use LivewireUI\Modal\ModalComponent;
 use App\Services\ScoreEngineService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use App\Services\VerificationCodeService;
 
@@ -78,6 +79,10 @@ class Authentication extends ModalComponent
                 'password' => ['required', Password::min(8)->letters()->mixedCase()->numbers()],
                 'password_confirmation' => 'required|same:password',
             ]);
+            $validated['password'] = Hash::make($validated['password']);
+            User::create($validated);
+            $this->dispatchBrowserEvent('alert', ['type' => 'success', 'message' => __('authentication.new_account_registered'), 'options' => ['timeOut' => 5000]]);
+            $this->closeModal();
         } elseif ($this->action === 'forgottenPassword') {
             $validated = $this->validate([
                 'email' => 'required|email',
